@@ -1,0 +1,9 @@
+README.md
+pyproject.toml
+src/pilot/__init__.py
+src/pilot/cli.py
+src/pilot_linux.egg-info/PKG-INFO
+src/pilot_linux.egg-info/SOURCES.txt
+src/pilot_linux.egg-info/dependency_links.txt
+src/pilot_linux.egg-info/entry_points.txt
+src/pilot_linux.egg-info/top_level.txt

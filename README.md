@@ -1,0 +1,117 @@
+# PilotShell
+
+**PILOT** is an interactive, light-weight Linux Monitoring & Troubleshooting Shell designed to assist system administrators in diagnosing system performance, running services, and storage health.
+
+## Features
+
+- **Interactive CLI Environment:** Implements a full command loop built on top of `cmd.Cmd`.
+- **Disk Health Monitoring:** Instantly track partition utilization with configurable usage warning thresholds.
+- **Process Profiling:** Quickly locate and trace system processes by application name, tracking memory and CPU metrics.
+- **Systemd Service Inspection:** Seamlessly query, search, and detail active and inactive services directly from the prompt.
+- **JSON Telemetry Report:** Keeps a persistent structure of all checks compiled during the active diagnostic session.
+
+## Installation
+
+Install directly from PyPI:
+
+```bash
+pip install pilotshell
+```
+
+## Quick Start
+
+Launch the pilot terminal environment using the global command-line shortcut:
+
+```bash
+pilot
+```
+
+Once inside the interactive environment, view available monitoring tools:
+
+```text
+=================================================
+ PILOT - Linux Monitoring & Troubleshooting Shell
+ Type 'help' to see commands. Type 'exit' to quit.
+=================================================
+pilot> help
+```
+
+### Example Commands
+
+Check filesystem status with an explicit warning threshold (e.g., alert at 75% capacity):
+```text
+pilot> disk --threshold=75
+```
+
+
+## Running PILOT as Root
+
+PILOT can be installed system-wide and run by both normal users and the root user. On some Linux systems, `/usr/local/bin` may be missing from root's `PATH`.
+
+### 1. Verify the Installation
+
+```bash
+which pilot
+ls -l /usr/local/bin/pilot
+```
+
+### 2. Fix `pilot: command not found` for Root
+
+Switch to the root user:
+
+```bash
+sudo -i
+```
+
+Add `/usr/local/bin` to the current root shell's `PATH`:
+
+```bash
+export PATH="/usr/local/bin:$PATH"
+```
+
+Verify that the command is available:
+
+```bash
+command -v pilot
+pilot
+```
+
+Expected command location:
+
+```text
+/usr/local/bin/pilot
+```
+
+### 3. Make the PATH Fix Permanent
+
+For the root user's Bash shell, run:
+
+```bash
+echo 'export PATH="/usr/local/bin:$PATH"' >> /root/.bashrc
+source /root/.bashrc
+```
+
+Verify:
+
+```bash
+command -v pilot
+```
+
+### 4. Troubleshooting
+
+If the command is still unavailable, run:
+
+```bash
+ls -l /usr/local/bin/pilot
+head -n 1 /usr/local/bin/pilot
+python3 --version
+```
+
+If the command is found but produces a Python error, check that the Python interpreter and PILOT package referenced by the executable are available.
+
+**Note:** Run PILOT as root only when elevated privileges are needed for system diagnostics. Review any suggested administrative commands before executing them.
+
+## License
+
+Distributed under the Apache License 2.0. See the `LICENSE` file for more details.
+

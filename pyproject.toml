@@ -1,0 +1,36 @@
+
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pilot-linux"
+version = "1.1.0"
+description = "Linux system monitoring and troubleshooting toolkit"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "Apache-2.0"
+authors = [
+    {name = "Shashank joshi"}
+]
+keywords = [
+    "linux", "devops", "monitoring",
+    "troubleshooting", "sysadmin"
+]
+classifiers = [
+    "Environment :: Console",
+    "Operating System :: POSIX :: Linux",
+    "Programming Language :: Python :: 3",
+]
+
+[project.scripts]
+pilot = "pilot.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[project.urls]
+Homepage = "https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell"
+Repository = "https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell.git"
+"Bug Tracker" = "https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell/issues"
+Documentation = "https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell/blob/main/README.md"
