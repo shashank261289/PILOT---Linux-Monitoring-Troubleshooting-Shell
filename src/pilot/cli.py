@@ -8,6 +8,7 @@ import datetime as dt
 import json
 import os
 import re
+import shlex
 import shutil
 import subprocess
 import time
@@ -199,17 +200,85 @@ def service_details(unit):
     return details
 
 
+def path_from_arg(value):
+    """Expand a user path without invoking a shell."""
+    return Path(os.path.expandvars(os.path.expanduser(value)))
+
+
+def readable_command(args, timeout=15):
+    rc, out, err = run_command(args, timeout=timeout)
+    return {"command": args, "returncode": rc, "stdout": out, "stderr": err}
+
+
+def lvm_advice_for_mount(mountpoint):
+    """Return read-only LVM mapping and safe suggested growth command."""
+    info = {"mountpoint": mountpoint, "lvm": False, "suggestion": None}
+    rc, out, err = run_command(["findmnt", "-n", "-o", "SOURCE,FSTYPE", "--target", mountpoint])
+    if rc != 0 or not out:
+        info["error"] = err or "findmnt could not resolve the mount."
+        return info
+    fields = out.split(None, 1)
+    source = fields[0]
+    fstype = fields[1] if len(fields) > 1 else "unknown"
+    info.update({"source": source, "filesystem_type": fstype})
+    if not source.startswith("/dev/") or not shutil.which("lvs") or not shutil.which("vgs"):
+        info["note"] = "This mount does not appear to be an LVM logical volume, or LVM tools are unavailable."
+        return info
+    rc, lvout, lverr = run_command(["lvs", "--noheadings", "--separator", "|", "-o", "vg_name,lv_name,lv_path", source])
+    if rc != 0 or not lvout.strip():
+        # Resolve symlink/device aliases using all LV paths.
+        rc, all_lvs, _ = run_command(["lvs", "--noheadings", "--separator", "|", "-o", "vg_name,lv_name,lv_path"])
+        matched = None
+        if rc == 0:
+            for line in all_lvs.splitlines():
+                cols = [x.strip() for x in line.split("|")]
+                if len(cols) >= 3 and cols[2] and os.path.realpath(cols[2]) == os.path.realpath(source):
+                    matched = cols
+                    break
+        if not matched:
+            info["note"] = "Unable to map this device to an LVM logical volume."
+            info["lvm_error"] = lverr
+            return info
+        vg, lv, lvpath = matched[:3]
+    else:
+        cols = [x.strip() for x in lvout.splitlines()[0].split("|")]
+        if len(cols) < 3:
+            info["note"] = "Could not parse LVM mapping."
+            return info
+        vg, lv, lvpath = cols[:3]
+    info.update({"lvm": True, "vg_name": vg, "lv_name": lv, "lv_path": lvpath or source})
+    rc, vgout, vgerr = run_command(["vgs", "--noheadings", "--units", "g", "--nosuffix", "--separator", "|", "-o", "vg_name,vg_free", vg])
+    if rc != 0 or not vgout.strip():
+        info["vg_error"] = vgerr or "Unable to query volume group free space."
+        return info
+    cols = [x.strip() for x in vgout.splitlines()[0].split("|")]
+    if len(cols) >= 2:
+        try:
+            free_gb = float(cols[1])
+        except ValueError:
+            free_gb = 0.0
+        info["vg_free_gb"] = free_gb
+        if free_gb > 0:
+            # Suggest a conservative 1G step or all available space when less than 1G.
+            add_gb = min(1.0, free_gb)
+            amount = f"{add_gb:g}G"
+            info["suggestion"] = f"lvextend -r -L +{amount} {lvpath or source}"
+            info["suggestion_note"] = "Review the LV/VG and backup status before running. -r requests filesystem resizing where supported; this command is not executed by PILOT."
+        else:
+            info["suggestion_note"] = "The volume group has no reported free space. Extend the underlying PV/VG or free VG space before growing this LV."
+    return info
+
+
 class PilotShell(cmd.Cmd):
     intro = """
 =================================================
  PILOT - Linux Monitoring & Troubleshooting Shell
  Type 'help' to see commands. Type 'exit' to quit.
+ Created by :- Shashank joshi
+ Pilot version :- 1.2.0
 =================================================
 """
-    BG_BLUE_TXT_WHITE = "\033[44m\033[37m"
-    RESET = "\033[0m"
-
-    prompt = f"{BG_BLUE_TXT_WHITE}pilot>{RESET}  "
+    prompt = "pilot> "
 
     def __init__(self):
         super().__init__()
@@ -229,43 +298,29 @@ class PilotShell(cmd.Cmd):
 
 
     def do_disk(self, arg):
-        """Check partition usage and flag filesystems above 70%. Usage: disk [mountpoint] [threshold_percent]"""
-        parts = arg.split()
+        """Show mounted filesystems; optionally filter by usage. Usage: disk | disk 70% | disk /var 80%"""
+        parts = shlex.split(arg)
         mountpoint = None
-        threshold = 70.0
-
+        threshold = None
         for part in parts:
-            if part.startswith("--threshold="):
-                try:
-                    threshold = float(part.split("=", 1)[1])
-                except ValueError:
-                    print("Invalid threshold. Use a number between 1 and 100.")
-                    return
-            elif part.startswith("/"):
+            candidate = part.rstrip("%")
+            if part.startswith("/"):
                 mountpoint = part
             else:
                 try:
-                    threshold = float(part)
+                    threshold = float(candidate)
                 except ValueError:
-                    print(f"Unrecognized argument: {part}")
-                    print("Usage: disk [mountpoint] [threshold_percent]")
+                    print("Usage: disk [mountpoint] [threshold%] (e.g. disk, disk 70%, disk /var 80%)")
                     return
-
-        if not 1 <= threshold <= 100:
+        if threshold is not None and not 1 <= threshold <= 100:
             print("Threshold must be between 1 and 100.")
             return
-
-        rc, output, error = run_command(
-            ["df", "-P",'-T',"-x", "tmpfs", "-x", "devtmpfs"],
-            timeout=15
-        )
+        rc, output, error = run_command(["df", "-P", "-T", "-x", "tmpfs", "-x", "devtmpfs"], timeout=15)
         if rc != 0:
             print(f"Disk check failed: {error or output or 'df command failed'}")
             return
-
         rows = []
-        lines = output.splitlines()
-        for line in lines[1:]:
+        for line in output.splitlines()[1:]:
             fields = line.split(None, 6)
             if len(fields) < 7:
                 continue
@@ -276,45 +331,36 @@ class PilotShell(cmd.Cmd):
                 continue
             if mountpoint and mount != mountpoint:
                 continue
-            rows.append({
-                "filesystem": filesystem,
-                "type": fstype,
-                "size": size,
-                "used": used,
-                "available": available,
-                "used_percent": percent,
-                "mountpoint": mount,
-                "status": "WARNING" if percent > threshold else "OK",
-                "threshold_percent": threshold,
-            })
-
-        print(f"\nDISK PARTITION UTILIZATION (warning threshold: > {threshold:.0f}%)")
+            if threshold is not None and percent <= threshold:
+                continue
+            row = {"filesystem": filesystem, "type": fstype, "size": size, "used": used,
+                   "available": available, "used_percent": percent, "mountpoint": mount,
+                   "threshold_percent": threshold, "status": "WARNING" if threshold is not None else "INFO"}
+            if threshold is not None:
+                row["lvm_advice"] = lvm_advice_for_mount(mount) if percent > threshold else None
+            rows.append(row)
+        label = f"filesystems above {threshold:g}%" if threshold is not None else "all mounted filesystems"
+        print(f"\nDISK UTILIZATION: {label}")
         if not rows:
-            print(f"No matching mounted filesystem found{f' for {mountpoint}' if mountpoint else ''}.")
-            self.add_report("Disk utilization", {
-                "mountpoint_filter": mountpoint, "threshold_percent": threshold,
-                "partitions": [], "error": "No matching mounted filesystem found",
-            })
+            print("No matching mounted filesystems found.")
+            self.add_report("Disk utilization", {"mountpoint_filter": mountpoint, "threshold_percent": threshold, "partitions": []})
             return
-
-        print(f"{'STATUS':<8} {'USE%':>5} {'SIZE':>10} {'USED':>10} {'AVAIL':>10} {'MOUNT':<24} FILESYSTEM")
+        print(f"{'USE%':>6} {'SIZE':>10} {'USED':>10} {'AVAIL':>10} {'MOUNT':<24} {'TYPE':<10} FILESYSTEM")
         for row in sorted(rows, key=lambda item: item["used_percent"], reverse=True):
-            status = row["status"]
-            print(f"{status:<8} {row['used_percent']:>4.0f}% {row['size']:>10} "
-                  f"{row['used']:>10} {row['available']:>10} "
-                  f"{row['mountpoint']:<24} {row['filesystem']}")
-        warnings = [row for row in rows if row["used_percent"] > threshold]
-        if warnings:
-            print(f"\nWARNING: {len(warnings)} filesystem(s) are above {threshold:.0f}% utilization.")
-        else:
-            print(f"\nOK: No matching filesystem is above {threshold:.0f}% utilization.")
-
-        self.add_report("Disk utilization", {
-            "mountpoint_filter": mountpoint,
-            "threshold_percent": threshold,
-            "partitions": rows,
-            "warning_count": len(warnings),
-        })
+            print(f"{row['used_percent']:>5.0f}% {row['size']:>10} {row['used']:>10} {row['available']:>10} {row['mountpoint']:<24} {row['type']:<10} {row['filesystem']}")
+            advice = row.get("lvm_advice")
+            if advice:
+                if advice.get("lvm"):
+                    print(f"  LVM: LV={advice.get('lv_name')} VG={advice.get('vg_name')} device={advice.get('lv_path')}")
+                    if "vg_free_gb" in advice:
+                        print(f"  VG free space: {advice['vg_free_gb']:.2f} GiB")
+                    if advice.get("suggestion"):
+                        print(f"  Suggested only (not executed): {advice['suggestion']}")
+                    if advice.get("suggestion_note"):
+                        print(f"  Note: {advice['suggestion_note']}")
+                else:
+                    print(f"  LVM advice: {advice.get('note', advice.get('error', 'Unable to map LVM details.'))}")
+        self.add_report("Disk utilization", {"mountpoint_filter": mountpoint, "threshold_percent": threshold, "partitions": rows})
 
     def do_ram(self, arg):
         """Show RAM utilization and top 5 RAM processes. Usage: ram [application]"""
@@ -428,6 +474,253 @@ class PilotShell(cmd.Cmd):
         print(details["status_output"])
         self.add_report("Service status", {"query": query, "unit": unit, **details})
 
+    def do_check(self, arg):
+        """Search a log file/directory for errors. Usage: check error <log-file-or-path>"""
+        try:
+            parts = shlex.split(arg)
+        except ValueError as exc:
+            print(f"Invalid arguments: {exc}")
+            return
+        if len(parts) < 2 or parts[0].lower() != "error":
+            print("Usage: check error <log-file-or-path>")
+            return
+        target = path_from_arg(" ".join(parts[1:]))
+        if not target.exists():
+            print(f"Path does not exist: {target}")
+            return
+        patterns = r"error|critical|fatal|failed|failure|exception|traceback|segfault|denied"
+        if target.is_file():
+            cmdline = ["grep", "-Ein", "--color=never", patterns, str(target)]
+        elif target.is_dir():
+            cmdline = ["grep", "-RIn", "-E", "--color=never", "--include=*.log", "--include=*.log.*", patterns, str(target)]
+        else:
+            print("Target is neither a regular file nor a directory.")
+            return
+        rc, out, err = run_command(cmdline, timeout=45)
+        print(f"\nLOG ERROR SCAN: {target}")
+        if out:
+            lines = out.splitlines()
+            for line in lines[-200:]:
+                print(line)
+            if len(lines) > 200:
+                print(f"Showing last 200 of {len(lines)} matching lines.")
+        elif rc == 1:
+            print("No matching error patterns found.")
+        else:
+            print(err or "Search failed; check file permissions and grep availability.")
+        self.add_report("Log error scan", {"path": str(target), "returncode": rc, "matches": out.splitlines()[-200:]})
+
+    def do_bigfiles(self, arg):
+        """Show largest files and immediate directories. Usage: bigfiles [path-or-mount]"""
+        target = path_from_arg(arg.strip() or "/")
+        if not target.exists() or not target.is_dir():
+            print(f"Directory or mount point not found: {target}")
+            return
+        print(f"\nLARGEST FILES UNDER {target} (top 5; same filesystem only)")
+        rc, out, err = run_command(["find", str(target), "-xdev", "-type", "f", "-printf", "%s\\t%p\\n"], timeout=90)
+        files = []
+        if rc == 0:
+            for line in out.splitlines():
+                size, sep, name = line.partition("\t")
+                if sep:
+                    try:
+                        files.append((int(size), name))
+                    except ValueError:
+                        pass
+        for size, name in sorted(files, reverse=True)[:5]:
+            print(f"{human_bytes(size):>10}  {name}")
+        if not files:
+            print(err or "No files found, or access was denied.")
+        print(f"\nLARGEST IMMEDIATE DIRECTORIES UNDER {target}")
+        rc, out, err = run_command(["du", "-x", "-B1", "--max-depth=1", str(target)], timeout=90)
+        dirs = []
+        if rc == 0:
+            for line in out.splitlines():
+                size, sep, name = line.partition("\t")
+                if sep:
+                    try:
+                        dirs.append((int(size), name))
+                    except ValueError:
+                        pass
+        for size, name in sorted(dirs, reverse=True)[:5]:
+            print(f"{human_bytes(size):>10}  {name}")
+        if rc != 0:
+            print(err or "Could not calculate directory sizes; check permissions.")
+        self.add_report("Large files and directories", {"path": str(target), "top_files": [{"size_bytes": size, "path": name} for size, name in sorted(files, reverse=True)[:5]], "top_directories": [{"size_bytes": size, "path": name} for size, name in sorted(dirs, reverse=True)[:5]]})
+
+    def do_lastlog(self, arg):
+        """Show last login records. Usage: lastlog [username]"""
+        args = ["lastlog"]
+        if arg.strip():
+            args += ["-u", arg.strip()]
+        rc, out, err = run_command(args, timeout=20)
+        print(out or err or "No lastlog output.")
+        self.add_report("Last login records", {"user_filter": arg.strip() or None, "returncode": rc, "output": out, "error": err})
+
+    def do_sar(self, arg):
+        """Run sysstat sar. Usage: sar [options], e.g. sar -u 1 3 or sar -r"""
+        if not shutil.which("sar"):
+            print("The 'sar' command is not installed. Install the sysstat package (e.g. sudo dnf install sysstat).")
+            return
+        try:
+            extra = shlex.split(arg)
+        except ValueError as exc:
+            print(f"Invalid arguments: {exc}")
+            return
+        # Do not allow shell execution; arguments are passed directly to sar.
+        rc, out, err = run_command(["sar", *extra], timeout=90)
+        print(out or err or "sar returned no output.")
+        self.add_report("SAR performance history", {"arguments": extra, "returncode": rc, "output": out, "error": err})
+
+    def do_findfile(self, arg):
+        """Find files by name. Usage: findfile <name-pattern> [start-path]"""
+        try:
+            parts = shlex.split(arg)
+        except ValueError as exc:
+            print(f"Invalid arguments: {exc}")
+            return
+        if not parts:
+            print("Usage: findfile <name-pattern> [start-path]")
+            return
+        pattern = parts[0]
+        start = path_from_arg(parts[1]) if len(parts) > 1 else Path.cwd()
+        if not start.exists():
+            print(f"Search path does not exist: {start}")
+            return
+        rc, out, err = run_command(["find", str(start), "-name", pattern, "-print", "-quit"], timeout=60)
+        # If the first match is found, run again without -quit to return multiple matches, bounded by output display.
+        if rc == 0 and out:
+            rc, out, err = run_command(["find", str(start), "-name", pattern, "-print"], timeout=90)
+        matches = out.splitlines() if out else []
+        print(f"\nFILE SEARCH: name={pattern!r}, path={start}")
+        for item in matches[:200]:
+            print(item)
+        if not matches:
+            print(err or "No matching files found (or search permissions were denied).")
+        if len(matches) > 200:
+            print(f"Showing first 200 of {len(matches)} matches.")
+        self.add_report("Find files", {"pattern": pattern, "start_path": str(start), "matches": matches[:200], "returncode": rc})
+
+    def do_findtext(self, arg):
+        """Find a word/text in files. Usage: findtext <text> <file-or-directory>"""
+        try:
+            parts = shlex.split(arg)
+        except ValueError as exc:
+            print(f"Invalid arguments: {exc}")
+            return
+        if len(parts) < 2:
+            print("Usage: findtext <text> <file-or-directory>")
+            return
+        needle = parts[0]
+        target = path_from_arg(" ".join(parts[1:]))
+        if not target.exists():
+            print(f"Path does not exist: {target}")
+            return
+        args = ["grep", "-RIn", "-F", "--color=never", "--", needle, str(target)] if target.is_dir() else ["grep", "-In", "-F", "--color=never", "--", needle, str(target)]
+        rc, out, err = run_command(args, timeout=90)
+        print(f"\nTEXT SEARCH: {needle!r} in {target}")
+        lines = out.splitlines()
+        for line in lines[:200]:
+            print(line)
+        if not lines:
+            print("No matches found." if rc == 1 else (err or "Search failed."))
+        if len(lines) > 200:
+            print(f"Showing first 200 of {len(lines)} matches.")
+        self.add_report("Find text in files", {"text": needle, "path": str(target), "matches": lines[:200], "returncode": rc, "error": err})
+
+    def do_load(self, arg):
+        """Show load average and normalized load percentage relative to CPU count. Usage: load"""
+        try:
+            loads = os.getloadavg()
+        except (AttributeError, OSError) as exc:
+            print(f"Could not read load average: {exc}")
+            return
+        cpus = os.cpu_count() or 1
+        one, five, fifteen = loads
+        normalized = one / cpus * 100
+        print("\nSYSTEM LOAD AVERAGE")
+        print(f"Logical CPUs:       {cpus}")
+        print(f"1-minute load:      {one:.2f} ({normalized:.1f}% of CPU-count baseline)")
+        print(f"5-minute load:      {five:.2f} ({five / cpus * 100:.1f}% of CPU-count baseline)")
+        print(f"15-minute load:     {fifteen:.2f} ({fifteen / cpus * 100:.1f}% of CPU-count baseline)")
+        print("Note: load average is runnable/uninterruptible task pressure, not direct CPU utilization; values above 100% can be normal on multi-core systems under contention.")
+        self.add_report("Load average", {"cpu_count": cpus, "load_1m": one, "load_5m": five, "load_15m": fifteen, "normalized_percent": {"1m": one / cpus * 100, "5m": five / cpus * 100, "15m": fifteen / cpus * 100}})
+
+    def do_scpget(self, arg):
+        """Copy a remote file to this machine. Usage: scpget user@host:/remote/file [local-path]"""
+        try:
+            parts = shlex.split(arg)
+        except ValueError as exc:
+            print(f"Invalid arguments: {exc}")
+            return
+        if not parts or len(parts) > 2 or ":" not in parts[0]:
+            print("Usage: scpget user@host:/remote/file [local-path]")
+            return
+        if not shutil.which("scp"):
+            print("scp is not installed. Install the OpenSSH client package.")
+            return
+        remote = parts[0]
+        local = str(path_from_arg(parts[1])) if len(parts) == 2 else "."
+        print(f"Copying {remote} to {local}. You may be prompted for SSH credentials.")
+        try:
+            # Inherit terminal streams so interactive SSH/password prompts work.
+            result = subprocess.run(["scp", "--", remote, local], timeout=300, check=False)
+            rc = result.returncode
+        except subprocess.TimeoutExpired:
+            rc = 124
+            print("SCP timed out after 300 seconds.")
+        except OSError as exc:
+            rc = 1
+            print(f"SCP failed: {exc}")
+        if rc == 0:
+            print("SCP completed successfully.")
+        else:
+            print(f"SCP failed with exit code {rc}. Check hostname, SSH access, remote path and destination permissions.")
+        self.add_report("SCP remote-to-local", {"remote": remote, "local": local, "returncode": rc})
+
+    def do_reason(self, arg):
+        """Diagnose permission denied on a file/directory. Usage: reason permission denied <path>"""
+        try:
+            parts = shlex.split(arg)
+        except ValueError as exc:
+            print(f"Invalid arguments: {exc}")
+            return
+        if len(parts) < 3 or parts[0].lower() != "permission" or parts[1].lower() != "denied":
+            print("Usage: reason permission denied <file-or-directory-path>")
+            return
+        target = path_from_arg(" ".join(parts[2:]))
+        print(f"\nPERMISSION-DENIED TROUBLESHOOTING: {target}")
+        if not target.exists() and not target.is_symlink():
+            print("Path does not currently exist or is not visible to this user; check spelling, parent path, and whether the mount is available.")
+        checks = [
+            ("Path metadata and ownership", ["ls", "-ld", "--", str(target)]),
+            ("Parent directory traversal permissions", ["namei", "-l", str(target)]),
+            ("Access control lists", ["getfacl", "-p", str(target)]),
+            ("SELinux context", ["ls", "-Zd", "--", str(target)]),
+            ("Mount and filesystem options", ["findmnt", "-T", str(target), "-o", "TARGET,SOURCE,FSTYPE,OPTIONS"]),
+        ]
+        report_checks = []
+        for title, command in checks:
+            print(f"\n--- {title} ---")
+            rc, out, err = run_command(command, timeout=15)
+            print(out or err or f"Command returned {rc} with no output.")
+            report_checks.append({"title": title, "command": command, "returncode": rc, "stdout": out, "stderr": err})
+        if shutil.which("getenforce"):
+            rc, out, err = run_command(["getenforce"])
+            print("\n--- SELinux mode ---")
+            print(out or err)
+            report_checks.append({"title": "SELinux mode", "returncode": rc, "stdout": out, "stderr": err})
+        print("\nCHECK THESE COMMON CAUSES")
+        print("1. File permissions: the effective user/group lacks read, write, or execute access.")
+        print("2. Parent directories: every parent directory needs execute (search) permission.")
+        print("3. ACLs: getfacl may show a restrictive named-user/group entry or mask.")
+        print("4. SELinux: inspect AVC denials with: sudo ausearch -m AVC -ts recent (if audit tools are installed).")
+        print("5. Mount options: read-only, NFS root-squash, CIFS credentials, or stale network mounts may block access.")
+        print("6. Identity: compare id, groups, and the process's effective user; sudo may change the identity context.")
+        print("7. Symlinks/attributes: inspect readlink -f PATH and lsattr PATH when relevant.")
+        print("Do not blindly run chmod 777 or disable SELinux. Apply the narrowest approved ownership/ACL/policy fix after confirming the cause.")
+        self.add_report("Permission denied troubleshooting", {"path": str(target), "checks": report_checks})
+
     def do_report(self, arg):
         """Write collected diagnostic results to a report. Usage: report [filename]"""
         REPORT_DIR.mkdir(parents=True, exist_ok=True)
@@ -454,21 +747,26 @@ class PilotShell(cmd.Cmd):
         """Show common PILOT examples."""
         print("""
 Examples:
-  disk                        Check all mounted partitions; warn above 70%
-  disk /                     Check the root partition
-  disk /var 80               Check /var and warn above 80%
-  disk --threshold=75        Check all partitions with a 75% threshold
-  ram                         Overall RAM + top 5 RAM processes
-  ram apache                  RAM processes matching 'apache'
-  cpu                         Overall CPU + top 5 CPU processes
-  cpu python                  CPU processes matching 'python'
-  ps                          List processes
-  ps -ef Apache               List processes matching 'Apache'
-  service apache              Find/check Apache-related systemd service
-  service transit agent       Search service names/descriptions
-  report                      Save collected checks as JSON
-  report health-check.json    Save report with a chosen filename
-  exit                        Exit PILOT
+  disk                         Show all mounted filesystems
+  disk 70%                     Show filesystems above 70% and LVM growth advice
+  disk /var 80%                Show /var only if usage is above 80%
+  bigfiles /var                Top 5 large files and immediate directories under /var
+  check error /var/log         Search log files for error/failure patterns
+  check error /var/log/messages
+  findfile '*.conf' /etc       Find files by name (quote wildcard patterns)
+  findtext 'connection refused' /var/log
+  lastlog                      Show last login records
+  lastlog root                 Show last login for root
+  sar -u 1 3                   Show CPU stats for 3 samples (requires sysstat)
+  load                         Load averages and normalized load percentages
+  reason permission denied /var/www/html
+  scpget admin@server:/var/log/app.log ./app.log
+  ram [application]            Overall RAM + top 5 RAM processes
+  cpu [application]            Overall CPU + top 5 CPU processes
+  ps -ef Apache                List processes matching Apache
+  service apache               Find/check Apache-related systemd service
+  report                       Save collected checks as JSON
+  exit                         Exit PILOT
 """)
 
     def do_exit(self, arg):
@@ -483,10 +781,12 @@ Examples:
 
     def emptyline(self):
         pass
+
+
 def main():
+    """Entry point for the `pilot` console command."""
     PilotShell().cmdloop()
 
 
 if __name__ == "__main__":
     main()
-
