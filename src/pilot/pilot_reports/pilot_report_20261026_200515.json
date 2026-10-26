@@ -1,0 +1,112 @@
+{
+  "tool": "PILOT",
+  "generated_at": "2026-10-26T20:02:08.231536+05:30",
+  "hostname": "Shashank",
+  "sections": [
+    {
+      "title": "Linux shell command",
+      "timestamp": "2026-10-26T20:02:45.521374+05:30",
+      "data": {
+        "command": "cpi",
+        "returncode": 127
+      }
+    },
+    {
+      "title": "CPU utilization",
+      "timestamp": "2026-10-26T20:02:49.481721+05:30",
+      "data": {
+        "cpu_busy_percent": 17.3469387755102,
+        "filter": null,
+        "top_processes": [
+          {
+            "pid": 9289,
+            "ppid": 9286,
+            "user": "root",
+            "mem_percent": 0.0,
+            "cpu_percent": 500.0,
+            "comm": "ps",
+            "command": "ps -eo pid=,ppid=,user=,%mem=,%cpu=,comm=,args="
+          },
+          {
+            "pid": 6316,
+            "ppid": 4365,
+            "user": "admin",
+            "mem_percent": 2.8,
+            "cpu_percent": 37.8,
+            "comm": "chrome",
+            "command": "/opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=4352 --enable-crash-reporter=074d51cf-bba6-4ddc-9e8a-2e961f136097, --change-stack-guard-on-fork=enable --ozone-platform=w"
+          },
+          {
+            "pid": 5037,
+            "ppid": 4365,
+            "user": "admin",
+            "mem_percent": 4.5,
+            "cpu_percent": 24.5,
+            "comm": "chrome",
+            "command": "/opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=4352 --enable-crash-reporter=074d51cf-bba6-4ddc-9e8a-2e961f136097, --change-stack-guard-on-fork=enable --ozone-platform=w"
+          },
+          {
+            "pid": 8764,
+            "ppid": 4365,
+            "user": "admin",
+            "mem_percent": 3.8,
+            "cpu_percent": 15.0,
+            "comm": "chrome",
+            "command": "/opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=4352 --enable-crash-reporter=074d51cf-bba6-4ddc-9e8a-2e961f136097, --change-stack-guard-on-fork=enable --ozone-platform=w"
+          },
+          {
+            "pid": 4394,
+            "ppid": 4362,
+            "user": "admin",
+            "mem_percent": 1.3,
+            "cpu_percent": 13.7,
+            "comm": "chrome",
+            "command": "/opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-override=/dev/dri/renderD128 --crashpad-handler-pid=4352 --enable-crash-rep"
+          }
+        ],
+        "error": null
+      }
+    },
+    {
+      "title": "Linux shell command",
+      "timestamp": "2026-10-26T20:02:57.227544+05:30",
+      "data": {
+        "command": "d -h",
+        "returncode": 127
+      }
+    },
+    {
+      "title": "Linux shell command",
+      "timestamp": "2026-10-26T20:03:03.751138+05:30",
+      "data": {
+        "command": "df -h",
+        "returncode": 0
+      }
+    },
+    {
+      "title": "Linux shell command",
+      "timestamp": "2026-10-26T20:03:14.908505+05:30",
+      "data": {
+        "command": "id",
+        "returncode": 0
+      }
+    },
+    {
+      "title": "Linux shell command",
+      "timestamp": "2026-10-26T20:03:21.080665+05:30",
+      "data": {
+        "command": "cd /etc",
+        "returncode": 0
+      }
+    },
+    {
+      "title": "Linux shell command",
+      "timestamp": "2026-10-26T20:03:24.221644+05:30",
+      "data": {
+        "command": "pwd",
+        "returncode": 0
+      }
+    }
+  ],
+  "report_text_path": "/home/admin/pilot-linux/src/pilot/pilot_reports/pilot_report_20261026_200515.txt"
+}

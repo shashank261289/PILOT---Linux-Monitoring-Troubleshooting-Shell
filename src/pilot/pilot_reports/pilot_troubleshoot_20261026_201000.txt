@@ -1,0 +1,444 @@
+PILOT TROUBLESHOOTING REPORT
+========================================================================
+Generated At: 2026-10-26T20:02:08.231536+05:30
+Hostname: Shashank
+Problem: apache is down
+Summary: Completed 8 diagnostic checks; 0 command(s) returned non-zero status. Review the evidence below. A non-zero result may indicate missing privileges/tools or a condition, not necessarily the root cause.
+Report Text Path: /home/admin/pilot-linux/src/pilot/pilot_reports/pilot_troubleshoot_20261026_201000.txt
+
+DETAILS
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:02:45.521374+05:30
+{
+  "command": "cpi",
+  "returncode": 127
+}
+------------------------------------------------------------------------
+[CPU utilization] @ 2026-10-26T20:02:49.481721+05:30
+{
+  "cpu_busy_percent": 17.3469387755102,
+  "filter": null,
+  "top_processes": [
+    {
+      "pid": 9289,
+      "ppid": 9286,
+      "user": "root",
+      "mem_percent": 0.0,
+      "cpu_percent": 500.0,
+      "comm": "ps",
+      "command": "ps -eo pid=,ppid=,user=,%mem=,%cpu=,comm=,args="
+    },
+    {
+      "pid": 6316,
+      "ppid": 4365,
+      "user": "admin",
+      "mem_percent": 2.8,
+      "cpu_percent": 37.8,
+      "comm": "chrome",
+      "command": "/opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=4352 --enable-crash-reporter=074d51cf-bba6-4ddc-9e8a-2e961f136097, --change-stack-guard-on-fork=enable --ozone-platform=w"
+    },
+    {
+      "pid": 5037,
+      "ppid": 4365,
+      "user": "admin",
+      "mem_percent": 4.5,
+      "cpu_percent": 24.5,
+      "comm": "chrome",
+      "command": "/opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=4352 --enable-crash-reporter=074d51cf-bba6-4ddc-9e8a-2e961f136097, --change-stack-guard-on-fork=enable --ozone-platform=w"
+    },
+    {
+      "pid": 8764,
+      "ppid": 4365,
+      "user": "admin",
+      "mem_percent": 3.8,
+      "cpu_percent": 15.0,
+      "comm": "chrome",
+      "command": "/opt/google/chrome/chrome --type=renderer --crashpad-handler-pid=4352 --enable-crash-reporter=074d51cf-bba6-4ddc-9e8a-2e961f136097, --change-stack-guard-on-fork=enable --ozone-platform=w"
+    },
+    {
+      "pid": 4394,
+      "ppid": 4362,
+      "user": "admin",
+      "mem_percent": 1.3,
+      "cpu_percent": 13.7,
+      "comm": "chrome",
+      "command": "/opt/google/chrome/chrome --type=gpu-process --gpu-recent-crash-count=0 --ozone-platform=wayland --render-node-override=/dev/dri/renderD128 --crashpad-handler-pid=4352 --enable-crash-rep"
+    }
+  ],
+  "error": null
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:02:57.227544+05:30
+{
+  "command": "d -h",
+  "returncode": 127
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:03:03.751138+05:30
+{
+  "command": "df -h",
+  "returncode": 0
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:03:14.908505+05:30
+{
+  "command": "id",
+  "returncode": 0
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:03:21.080665+05:30
+{
+  "command": "cd /etc",
+  "returncode": 0
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:03:24.221644+05:30
+{
+  "command": "pwd",
+  "returncode": 0
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:05:23.674052+05:30
+{
+  "command": "healthcehck",
+  "returncode": 127
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:05:46.156033+05:30
+{
+  "command": "uname -a",
+  "returncode": 0
+}
+------------------------------------------------------------------------
+[Service lookup] @ 2026-10-26T20:06:13.570283+05:30
+{
+  "query": "sshd",
+  "matches": [
+    "sshd-keygen@.service",
+    "sshd-keygen@ecdsa.service",
+    "sshd-keygen@ed25519.service",
+    "sshd-keygen@rsa.service",
+    "sshd-unix-local@.service",
+    "sshd.service",
+    "sshd@.service",
+    "●"
+  ]
+}
+------------------------------------------------------------------------
+[Service lookup] @ 2026-10-26T20:06:43.735550+05:30
+{
+  "query": "sshd.service",
+  "matches": [
+    "sshd.service",
+    "sshd@.service",
+    "●"
+  ]
+}
+------------------------------------------------------------------------
+[Service status] @ 2026-10-26T20:07:12.940056+05:30
+{
+  "query": "status sshd",
+  "unit": "●",
+  "Id": "\\xe2\\x97\\x8f.service",
+  "Description": "\\xe2\\x97\\x8f.service",
+  "LoadState": "not-found",
+  "ActiveState": "inactive",
+  "SubState": "dead",
+  "UnitFileState": "",
+  "MainPID": "0",
+  "Result": "success",
+  "status_exit_code": 4,
+  "status_output": "Invalid unit name \"●\" escaped as \"\\xe2\\x97\\x8f\" (maybe you should use systemd-escape?).\nUnit \\xe2\\x97\\x8f.service could not be found."
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:08:06.119010+05:30
+{
+  "command": "Troubleshooting apache down",
+  "returncode": 127
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:08:22.613701+05:30
+{
+  "command": "Troubleshoot apache down",
+  "returncode": 127
+}
+------------------------------------------------------------------------
+[Linux shell command] @ 2026-10-26T20:08:57.043993+05:30
+{
+  "command": "Troubleshoot apache is down and users get connection refused",
+  "returncode": 127
+}
+------------------------------------------------------------------------
+[Troubleshooting diagnostic bundle] @ 2026-10-26T20:09:18.953390+05:30
+{
+  "checks": [
+    {
+      "title": "Host and uptime",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "hostname; date; uptime; whoami; id"
+        ],
+        "returncode": 0,
+        "stdout": "Shashank\nMonday 26 October 2026 08:09:18 PM IST\n 20:09:18 up  4:54,  3 users,  load average: 0.40, 0.59, 1.00\nroot\nuid=0(root) gid=0(root) groups=0(root),979(ollama) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "CPU and load",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "nproc; cat /proc/loadavg; ps -eo pid,ppid,user,%cpu,%mem,stat,comm --sort=-%cpu | head -n 11"
+        ],
+        "returncode": 0,
+        "stdout": "4\n0.40 0.59 1.00 1/1002 9394\n    PID    PPID USER     %CPU %MEM STAT COMMAND\n   9395    9372 root      200  0.0 R+   ps\n   6316    4365 admin    36.7  2.8 Sl   chrome\n   9350       1 root     33.3  0.0 Ss   systemd-hostnam\n   5037    4365 admin    24.3  4.6 Sl   chrome\n   4394    4362 admin    13.5  1.3 Sl   chrome\n   8764    4365 admin    13.2  4.1 Sl   chrome\n   3568    3435 admin    10.8  1.1 Ssl  gnome-shell\n   4586    4365 admin     9.1  2.2 Sl   chrome\n   4343    3568 admin     6.6  3.3 Sl   chrome\n   8032    6515 root      3.1  1.8 Sl+  python",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Memory",
+      "data": {
+        "command": [
+          "free",
+          "-h"
+        ],
+        "returncode": 0,
+        "stdout": "total        used        free      shared  buff/cache   available\nMem:            15Gi       5.3Gi       8.4Gi       686Mi       2.5Gi       9.9Gi\nSwap:          7.8Gi          0B       7.8Gi",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Disk and inodes",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "df -hT; echo; df -ih"
+        ],
+        "returncode": 0,
+        "stdout": "Filesystem          Type      Size  Used Avail Use% Mounted on\n/dev/mapper/cs-root xfs        70G   33G   38G  46% /\ndevtmpfs            devtmpfs  7.6G     0  7.6G   0% /dev\ntmpfs               tmpfs     7.7G   84K  7.7G   1% /dev/shm\nefivarfs            efivarfs  384K  237K  143K  63% /sys/firmware/efi/efivars\ntmpfs               tmpfs     3.1G   12M  3.1G   1% /run\ntmpfs               tmpfs     1.0M     0  1.0M   0% /run/credentials/systemd-journald.service\n/dev/loop0          squashfs  128K  128K     0 100% /var/lib/snapd/snap/bare/5\n/dev/loop1          squashfs  188M  188M     0 100% /var/lib/snapd/snap/chromium/3396\n/dev/loop2          squashfs  607M  607M     0 100% /var/lib/snapd/snap/gnome-46-2404/153\n/dev/loop3          squashfs   67M   67M     0 100% /var/lib/snapd/snap/core24/1643\n/dev/loop4          squashfs   50M   50M     0 100% /var/lib/snapd/snap/cups/1170\n/dev/sda2           xfs       960M  672M  289M  70% /boot\n/dev/loop5          squashfs   92M   92M     0 100% /var/lib/snapd/snap/gtk-common-themes/1535\n/dev/loop7          squashfs  395M  395M     0 100% /var/lib/snapd/snap/mesa-2404/1165\n/dev/loop6          squashfs   49M   49M     0 100% /var/lib/snapd/snap/snapd/26382\n/dev/loop9          squashfs   67M   67M     0 100% /var/lib/snapd/snap/core24/1587\n/dev/loop8          squashfs   74M   74M     0 100% /var/lib/snapd/snap/core22/2411\n/dev/loop10         squashfs   50M   50M     0 100% /var/lib/snapd/snap/snapd/26865\n/dev/sda1           vfat      599M  8.9M  590M   2% /boot/efi\n/dev/mapper/cs-home xfs       159G   54G  106G  34% /home\ntmpfs               tmpfs     1.6G  160K  1.6G   1% /run/user/1000\ntmpfs               tmpfs     1.6G   60K  1.6G   1% /run/user/0\n\nFilesystem          Inodes IUsed IFree IUse% Mounted on\n/dev/mapper/cs-root    35M  368K   35M    2% /\ndevtmpfs              1.9M   658  1.9M    1% /dev\ntmpfs                 2.0M     3  2.0M    1% /dev/shm\nefivarfs                 0     0     0     - /sys/firmware/efi/efivars\ntmpfs                 800K  1.5K  799K    1% /run\ntmpfs                 1.0K     2  1022    1% /run/credentials/systemd-journald.service\n/dev/loop0              29    29     0  100% /var/lib/snapd/snap/bare/5\n/dev/loop1             955   955     0  100% /var/lib/snapd/snap/chromium/3396\n/dev/loop2             23K   23K     0  100% /var/lib/snapd/snap/gnome-46-2404/153\n/dev/loop3             11K   11K     0  100% /var/lib/snapd/snap/core24/1643\n/dev/loop4            1.9K  1.9K     0  100% /var/lib/snapd/snap/cups/1170\n/dev/sda2             512K    39  512K    1% /boot\n/dev/loop5             75K   75K     0  100% /var/lib/snapd/snap/gtk-common-themes/1535\n/dev/loop7             796   796     0  100% /var/lib/snapd/snap/mesa-2404/1165\n/dev/loop6             617   617     0  100% /var/lib/snapd/snap/snapd/26382\n/dev/loop9             11K   11K     0  100% /var/lib/snapd/snap/core24/1587\n/dev/loop8             14K   14K     0  100% /var/lib/snapd/snap/core22/2411\n/dev/loop10            610   610     0  100% /var/lib/snapd/snap/snapd/26865\n/dev/sda1                0     0     0     - /boot/efi\n/dev/mapper/cs-home    80M   41K   80M    1% /home\ntmpfs                 391K   184  391K    1% /run/user/1000\ntmpfs                 391K    55  391K    1% /run/user/0",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Failed systemd units",
+      "data": {
+        "command": [
+          "systemctl",
+          "--failed",
+          "--no-pager",
+          "--full"
+        ],
+        "returncode": 0,
+        "stdout": "UNIT LOAD ACTIVE SUB DESCRIPTION\n\n0 loaded units listed.",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Recent system journal errors",
+      "data": {
+        "command": [
+          "journalctl",
+          "-p",
+          "err",
+          "-n",
+          "60",
+          "--no-pager"
+        ],
+        "returncode": 0,
+        "stdout": "Oct 26 20:45:06 Shashank kernel: x86/cpu: SGX disabled or unsupported by BIOS.\nOct 26 20:45:06 Shashank kernel: virt/tdx: TDX not supported by the host platform\nOct 26 20:45:06 Shashank kernel: intel-lpss INT3446:00: probe with driver intel-lpss failed with error -16\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: cnic\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: cnic_init\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: bnx2i\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: bnx2i_mod_init\nOct 26 20:45:06 Shashank systemd-udevd[547]: /etc/udev/rules.d/99-crc-vsock.rules:1 Unknown group 'libvirt', ignoring.\nOct 26 20:45:07 Shashank (udev-worker)[631]: event4: Failed to parse key identifier 'performance': Invalid argument\nOct 26 20:45:07 Shashank kernel: Warning: Unmaintained driver is detected: e1000_init_module\nOct 26 20:45:07 Shashank kernel: e1000e 0000:00:1f.6: probe with driver e1000e failed with error -2\nOct 26 15:15:11 Shashank (udev-worker)[1062]: event4: Failed to parse key identifier 'performance': Invalid argument\nOct 26 15:15:14 Shashank kernel: Bluetooth: hci0: Reading supported features failed (-16)\nOct 26 15:15:19 Shashank SetroubleshootPrivileged.py[1755]: failed to retrieve rpm info for path '/var/lib/selinux/targeted/active/modules/200/snappy':\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/.pwd.lock. For complete SELinux messages run: sealert -l a917baf8-9100-4781-a469-b57b3706bd10\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/NetworkManager. For complete SELinux messages run: sealert -l 97403079-5fd3-44d9-9f9b-31641a97fa28\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/adjtime. For complete SELinux messages run: sealert -l 73413f71-9326-4e45-9389-1880853c9009\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/aliases. For complete SELinux messages run: sealert -l f87eae27-ef36-4b66-822c-03a27a12d783\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/audit. For complete SELinux messages run: sealert -l 7e26c3af-3a54-4dde-9bc0-fce1cf8dd916\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/avahi. For complete SELinux messages run: sealert -l 6cabc53e-a38b-4a41-afbc-3cb964efc2cc\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/bluetooth. For complete SELinux messages run: sealert -l 2a8a6e56-4c1c-46fe-aff9-d334b8792dfc\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/containerd. For complete SELinux messages run: sealert -l d6fa386b-a3b1-434f-8e5c-eac649d02500\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/cron.d. For complete SELinux messages run: sealert -l e21f52a8-2b0c-41e3-a198-eba1be6f136b\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/crontab. For complete SELinux messages run: sealert -l cc71bee1-b881-4fab-9c6a-bd0ff5086b92\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/cups. For complete SELinux messages run: sealert -l 74900028-ed61-43d2-b0fa-e163ffa07eaf\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/dbus-1. For complete SELinux messages run: sealert -l 5360ebb4-52f8-44aa-bdfd-ae3d43534bab\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/dhcp. For complete SELinux messages run: sealert -l 63b11e89-aae5-4c4d-b910-383f2b5ea285\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/dnsmasq.conf. For complete SELinux messages run: sealert -l 8c0c363a-badf-48e9-b1d7-f0ca0266f9b1\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/dnsmasq.d. For complete SELinux messages run: sealert -l ba5f81a3-c9a9-49d0-a2f2-e38e833363fe\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/exports. For complete SELinux messages run: sealert -l 5bc79d85-2d58-4f7e-9fc0-1f71f7e96304\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/exports.d. For complete SELinux messages run: sealert -l caaadc41-f43c-4e40-b728-3d5eb7806aa8\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/firewalld. For complete SELinux messages run: sealert -l e754d611-2a00-48ce-892e-3a7ff04998c6\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/gdm. For complete SELinux messages run: sealert -l f853a561-5200-42f4-92a6-f9c13f35cf99\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/gshadow. For complete SELinux messages run: sealert -l 9bc984aa-cce3-4e88-9dbf-23516cf7626e\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/hostname. For complete SELinux messages run: sealert -l 31b351a2-fab0-4df3-8fe8-c653a51099aa\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/hosts. For complete SELinux messages run: sealert -l 59b7ad5d-9909-49b3-b393-ff94eccf8166\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/kdump.conf. For complete SELinux messages run: sealert -l 835f3f59-3dee-4fbf-a8fa-cee5fdd37f99\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/krb5.conf. For complete SELinux messages run: sealert -l a667f55c-3801-46bb-912c-bcde366d1ade\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/libvirt. For complete SELinux messages run: sealert -l d40b6e48-0b6d-409f-92be-6bfc94679247\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/lvm. For complete SELinux messages run: sealert -l 939a5ca1-83a0-4b4d-b1ce-090b43479f15\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/mcelog. For complete SELinux messages run: sealert -l c131b938-47dd-48af-996e-aca503f68935\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/mdevctl.d. For complete SELinux messages run: sealert -l 04987b47-6264-4ce8-86e8-a4af812a9af8\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/modprobe.d. For complete SELinux messages run: sealert -l 6d1d3925-178d-469f-ac4a-f79ad96a9df1\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/multipath. For complete SELinux messages run: sealert -l 5d6cccc8-7430-4706-906f-e2881682f633\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/pki. For complete SELinux messages run: sealert -l 7bb3c4f8-bf00-48b9-b1f5-2b3b745b2b56\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/printcap. For complete SELinux messages run: sealert -l 94f54d2d-0f10-4925-9922-8d8f2da27937\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/rsyncd.conf. For complete SELinux messages run: sealert -l b8654e9b-e3e3-4873-b6b7-b2a772a2c766\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/rsyslog.conf. For complete SELinux messages run: sealert -l 3ef6b9c7-f5ad-4eae-bc98-a7b73904d40d\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/rsyslog.d. For complete SELinux messages run: sealert -l dab361d8-7659-4b98-8149-62cb087cd952\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/samba. For complete SELinux messages run: sealert -l 10aa5364-ff36-485a-a25c-92fc841c4938\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/sssd. For complete SELinux messages run: sealert -l fbe4f29f-fa9c-4ae2-8ec7-d3297e78503a\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/tuned. For complete SELinux messages run: sealert -l d2e9f84a-bb44-4501-93c0-6cbc09b73f0b\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/unbound. For complete SELinux messages run: sealert -l fdc4257a-450e-46aa-ac02-ec8ab7651f90\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/vmware-tools. For complete SELinux messages run: sealert -l c698f3b1-abb6-4a26-9a69-9220c73e1389\nOct 26 15:15:19 Shashank setroubleshoot[1650]: failed to retrieve rpm info for path '/var/snap/cups/common/etc/papersize':\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /var/snap/cups/common/etc/papersize. For complete SELinux messages run: sealert -l 3e5c666a-921b-41c4-bfcb-13d9bb0be932\nOct 26 15:16:50 Shashank gdm-password][3424]: gkr-pam: unable to locate daemon control file\nOct 26 15:16:58 Shashank gnome-session-binary[2440]: GLib-GObject-CRITICAL: instance with invalid (NULL) class pointer",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Network addresses and routes",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "ip -brief address; echo; ip route"
+        ],
+        "returncode": 0,
+        "stdout": "lo               UNKNOWN        127.0.0.1/8 ::1/128 \nwlp2s0           UP             192.168.29.66/24 2405:201:1027:d022:b049:5408:a7b8:e3c9/64 fe80::9a13:87aa:e711:e93/64 \n\ndefault via 192.168.29.1 dev wlp2s0 proto dhcp src 192.168.29.66 metric 600 \n192.168.29.0/24 dev wlp2s0 proto kernel scope link src 192.168.29.66 metric 600",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Listening TCP/UDP sockets",
+      "data": {
+        "command": [
+          "ss",
+          "-lntup"
+        ],
+        "returncode": 0,
+        "stdout": "Netid            State             Recv-Q            Send-Q                                                   Local Address:Port                          Peer Address:Port            Process                                               \nudp              UNCONN            0                 0                                                            127.0.0.1:323                                0.0.0.0:*                users:((\"chronyd\",pid=1408,fd=4))                    \nudp              UNCONN            0                 0                                                        192.168.29.66:44161                              0.0.0.0:*                users:((\"chrome\",pid=4399,fd=95))                    \nudp              UNCONN            0                 0                                                          224.0.0.251:5353                               0.0.0.0:*                users:((\"chrome\",pid=4399,fd=89))                    \nudp              UNCONN            0                 0                                                          224.0.0.251:5353                               0.0.0.0:*                users:((\"chrome\",pid=4343,fd=90))                    \nudp              UNCONN            0                 0                                                          224.0.0.251:5353                               0.0.0.0:*                users:((\"chrome\",pid=4399,fd=138))                   \nudp              UNCONN            0                 0                                                              0.0.0.0:5353                               0.0.0.0:*                users:((\"avahi-daemon\",pid=1406,fd=12))              \nudp              UNCONN            0                 0                                                                [::1]:323                                   [::]:*                users:((\"chronyd\",pid=1408,fd=5))                    \nudp              UNCONN            0                 0                                    [fe80::9a13:87aa:e711:e93]%wlp2s0:546                                   [::]:*                users:((\"NetworkManager\",pid=1412,fd=22))            \nudp              UNCONN            0                 0                             [2405:201:1027:d022:b049:5408:a7b8:e3c9]:50154                                 [::]:*                users:((\"chrome\",pid=4399,fd=148))                   \nudp              UNCONN            0                 0                                                                 [::]:5353                                  [::]:*                users:((\"avahi-daemon\",pid=1406,fd=13))              \ntcp              LISTEN            0                 4096                                                         127.0.0.1:631                                0.0.0.0:*                users:((\"cupsd\",pid=1563,fd=8))                      \ntcp              LISTEN            0                 128                                                            0.0.0.0:22                                 0.0.0.0:*                users:((\"sshd\",pid=1571,fd=7))                       \ntcp              LISTEN            0                 2048                                                                 *:8501                                     *:*                users:((\"python\",pid=8032,fd=11))                    \ntcp              LISTEN            0                 128                                                               [::]:22                                    [::]:*                users:((\"sshd\",pid=1571,fd=8))                       \ntcp              LISTEN            0                 4096                                                                 *:9090                                     *:*                users:((\"systemd\",pid=1,fd=68))                      \ntcp              LISTEN            0                 4096                                                             [::1]:631                                   [::]:*                users:((\"cupsd\",pid=1563,fd=7))                      \ntcp              LISTEN            0                 4096                                                                 *:11434                                    *:*                users:((\"ollama\",pid=1788,fd=4))",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Resolver configuration",
+      "data": {
+        "command": [
+          "cat",
+          "/etc/resolv.conf"
+        ],
+        "returncode": 0,
+        "stdout": "# Generated by NetworkManager\nnameserver 192.168.29.1\nnameserver 2405:201:1027:d022::c0a8:1d01",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Service status summary",
+      "data": {
+        "command": [
+          "systemctl",
+          "--failed",
+          "--no-pager",
+          "--full"
+        ],
+        "returncode": 0,
+        "stdout": "UNIT LOAD ACTIVE SUB DESCRIPTION\n\n0 loaded units listed.",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Recent boot journal",
+      "data": {
+        "command": [
+          "journalctl",
+          "-b",
+          "-n",
+          "100",
+          "--no-pager"
+        ],
+        "returncode": 0,
+        "stdout": "Oct 26 18:16:09 Shashank systemd[1]: Starting fwupd-refresh.service - Refresh fwupd metadata and update motd...\nOct 26 18:16:10 Shashank systemd[1]: fwupd-refresh.service: Deactivated successfully.\nOct 26 18:16:10 Shashank systemd[1]: Finished fwupd-refresh.service - Refresh fwupd metadata and update motd.\nOct 26 18:18:49 Shashank wpa_supplicant[1546]: wlp2s0: RSN: Group rekeying completed with f0:ed:b8:fa:08:66 [GTK=CCMP]\nOct 26 18:48:56 Shashank systemd[3435]: Started ptyxis-spawn-cb7c91db-9dea-493d-bbcc-f0cad6bd304e.scope - [systemd-run] /usr/bin/bash.\nOct 26 18:59:57 Shashank ollama[1788]: time=2026-10-26T18:59:57.302+05:30 level=INFO source=model_recommendations.go:177 msg=\"model recommendations cache sleep scheduled\" wait=4h21m32.424952358s consecutive_failures=0\nOct 26 19:01:01 Shashank CROND[8521]: (root) CMD (run-parts /etc/cron.hourly)\nOct 26 19:01:01 Shashank run-parts[8524]: (/etc/cron.hourly) starting 0anacron\nOct 26 19:01:01 Shashank run-parts[8530]: (/etc/cron.hourly) finished 0anacron\nOct 26 19:01:01 Shashank CROND[8520]: (root) CMDEND (run-parts /etc/cron.hourly)\nOct 26 19:10:15 Shashank cupsd[1563]: REQUEST localhost - - \"POST / HTTP/1.1\" 200 184 Renew-Subscription successful-ok\nOct 26 19:15:17 Shashank cups.cups-browsed[1748]: + true\nOct 26 19:15:17 Shashank cups.cups-browsed[1748]: + sleep 3600\nOct 26 19:18:51 Shashank wpa_supplicant[1546]: wlp2s0: RSN: Group rekeying completed with f0:ed:b8:fa:08:66 [GTK=CCMP]\nOct 26 19:19:26 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-BEACON-LOSS\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1591] device (wlp2s0): ip:dhcp4: restarting\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1608] dhcp4 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1609] dhcp4 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1609] dhcp4 (wlp2s0): state changed no lease\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1611] dhcp4 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1650] device (wlp2s0): ip:dhcp6: restarting\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1652] dhcp6 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1674] dhcp6 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1674] dhcp6 (wlp2s0): state changed no lease\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1676] dhcp6 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-DISCONNECTED bssid=f0:ed:b8:fa:08:66 reason=4 locally_generated=1\nOct 26 19:19:26 Shashank wpa_supplicant[1546]: wlp2s0: Added BSSID f0:ed:b8:fa:08:66 into ignore list, ignoring for 10 seconds\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.2212] device (wlp2s0): supplicant interface state: completed -> disconnected\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.2226] device (p2p-dev-wlp2s0): supplicant management interface state: completed -> disconnected\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.3152] device (wlp2s0): supplicant interface state: disconnected -> scanning\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.3153] device (p2p-dev-wlp2s0): supplicant management interface state: disconnected -> scanning\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: Removed BSSID f0:ed:b8:fa:08:66 from ignore list (clear)\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: SME: Trying to authenticate with f0:ed:b8:fa:08:66 (SSID='JioFiber-ktJDx_5G' freq=5220 MHz)\nOct 26 19:19:27 Shashank kernel: wlp2s0: authenticate with f0:ed:b8:fa:08:66 (local address=90:61:ae:3b:20:db)\nOct 26 19:19:27 Shashank kernel: wlp2s0: send auth to f0:ed:b8:fa:08:66 (try 1/3)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.4948] device (wlp2s0): supplicant interface state: scanning -> authenticating\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.4950] device (p2p-dev-wlp2s0): supplicant management interface state: scanning -> authenticating\nOct 26 19:19:27 Shashank kernel: wlp2s0: authenticated\nOct 26 19:19:27 Shashank kernel: wlp2s0: associate with f0:ed:b8:fa:08:66 (try 1/3)\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: Trying to associate with f0:ed:b8:fa:08:66 (SSID='JioFiber-ktJDx_5G' freq=5220 MHz)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5003] device (wlp2s0): supplicant interface state: authenticating -> associating\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5004] device (p2p-dev-wlp2s0): supplicant management interface state: authenticating -> associating\nOct 26 19:19:27 Shashank kernel: wlp2s0: RX AssocResp from f0:ed:b8:fa:08:66 (capab=0x1111 status=0 aid=2)\nOct 26 19:19:27 Shashank kernel: wlp2s0: associated\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: Associated with f0:ed:b8:fa:08:66\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5116] device (wlp2s0): supplicant interface state: associating -> associated\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5117] device (p2p-dev-wlp2s0): supplicant management interface state: associating -> associated\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: WPA: Key negotiation completed with f0:ed:b8:fa:08:66 [PTK=CCMP GTK=CCMP]\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-CONNECTED - Connection to f0:ed:b8:fa:08:66 completed [id=0 id_str=]\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8475] device (wlp2s0): supplicant interface state: associated -> completed\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8566] device (wlp2s0): ip:dhcp4: restarting\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8623] dhcp4 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8684] dhcp4 (wlp2s0): state changed no lease\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8686] dhcp4 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8689] device (wlp2s0): ip:dhcp6: restarting\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8691] dhcp6 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8691] dhcp6 (wlp2s0): state changed no lease\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8734] dhcp6 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8737] device (p2p-dev-wlp2s0): supplicant management interface state: associated -> completed\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8836] dhcp6 (wlp2s0): state changed new lease\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8870] dhcp4 (wlp2s0): state changed new lease, address=192.168.29.66, acd pending\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8880] dhcp4 (wlp2s0): state changed new lease, address=192.168.29.66\nOct 26 19:19:27 Shashank systemd[1]: Starting NetworkManager-dispatcher.service - Network Manager Script Dispatcher Service...\nOct 26 19:19:27 Shashank systemd[1]: Started NetworkManager-dispatcher.service - Network Manager Script Dispatcher Service.\nOct 26 19:19:38 Shashank systemd[1]: NetworkManager-dispatcher.service: Deactivated successfully.\nOct 26 19:24:30 Shashank google-chrome.desktop[4350]: [4343:4343:1026/192430.654012:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.\nOct 26 19:25:01 Shashank google-chrome.desktop[4350]: [4343:4343:1026/192501.033767:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.\nOct 26 19:25:04 Shashank google-chrome.desktop[4350]: [4343:4343:1026/192504.503604:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.\nOct 26 19:37:14 Shashank systemd[1]: Starting dnf-makecache.service - dnf makecache...\nOct 26 19:37:15 Shashank dnf[8988]: CentOS Stream 10 - BaseOS                        21 kB/s | 2.1 kB     00:00\nOct 26 19:37:15 Shashank dnf[8988]: CentOS Stream 10 - AppStream                     27 kB/s | 2.1 kB     00:00\nOct 26 19:37:15 Shashank dnf[8988]: CentOS Stream 10 - Extras packages               12 kB/s | 5.6 kB     00:00\nOct 26 19:37:15 Shashank dnf[8988]: Docker CE Stable - x86_64                        23 kB/s | 2.0 kB     00:00\nOct 26 19:37:16 Shashank dnf[8988]: Extra Packages for Enterprise Linux 10 - x86_64  30 kB/s | 6.9 kB     00:00\nOct 26 19:37:16 Shashank dnf[8988]: google-chrome                                   7.6 kB/s | 1.3 kB     00:00\nOct 26 19:37:16 Shashank dnf[8988]: Metadata cache created.\nOct 26 19:37:16 Shashank systemd[1]: dnf-makecache.service: Deactivated successfully.\nOct 26 19:37:16 Shashank systemd[1]: Finished dnf-makecache.service - dnf makecache.\nOct 26 19:37:16 Shashank systemd[1]: dnf-makecache.service: Consumed 1.324s CPU time, 106.4M memory peak.\nOct 26 19:57:09 Shashank systemd[1]: Starting fwupd-refresh.service - Refresh fwupd metadata and update motd...\nOct 26 19:57:10 Shashank systemd[1]: fwupd-refresh.service: Deactivated successfully.\nOct 26 19:57:10 Shashank systemd[1]: Finished fwupd-refresh.service - Refresh fwupd metadata and update motd.\nOct 26 20:00:05 Shashank systemd[1]: Starting fprintd.service - Fingerprint Authentication Daemon...\nOct 26 20:00:05 Shashank systemd[1]: Started fprintd.service - Fingerprint Authentication Daemon.\nOct 26 20:00:13 Shashank sudo[9202]:    admin : TTY=pts/0 ; PWD=/home/admin/pilot-linux/src/pilot ; USER=root ; COMMAND=/bin/su\nOct 26 20:00:13 Shashank systemd-logind[1424]: Existing logind session ID 3 used by new audit session, ignoring.\nOct 26 20:00:13 Shashank systemd-logind[1424]: New session c3 of user root.\nOct 26 20:00:13 Shashank systemd[1]: Started session-c3.scope - Session c3 of User root.\nOct 26 20:00:13 Shashank sudo[9202]: pam_unix(sudo:session): session opened for user root(uid=0) by admin(uid=1000)\nOct 26 20:00:13 Shashank su[9214]: (to root) root on pts/4\nOct 26 20:00:13 Shashank su[9214]: pam_unix(su:session): session opened for user root(uid=0) by admin(uid=0)\nOct 26 20:00:35 Shashank systemd[1]: fprintd.service: Deactivated successfully.\nOct 26 20:01:01 Shashank CROND[9268]: (root) CMD (run-parts /etc/cron.hourly)\nOct 26 20:01:01 Shashank run-parts[9271]: (/etc/cron.hourly) starting 0anacron\nOct 26 20:01:01 Shashank run-parts[9277]: (/etc/cron.hourly) finished 0anacron\nOct 26 20:01:01 Shashank CROND[9267]: (root) CMDEND (run-parts /etc/cron.hourly)\nOct 26 20:08:35 Shashank cupsd[1563]: REQUEST localhost - - \"POST / HTTP/1.1\" 200 184 Renew-Subscription successful-ok\nOct 26 20:09:18 Shashank systemd[1]: Starting systemd-hostnamed.service - Hostname Service...\nOct 26 20:09:18 Shashank systemd[1]: Started systemd-hostnamed.service - Hostname Service.",
+        "stderr": ""
+      }
+    }
+  ],
+  "nonzero_checks": [],
+  "stderr_findings": []
+}
+------------------------------------------------------------------------
+[Troubleshooting diagnostic bundle] @ 2026-10-26T20:10:00.248700+05:30
+{
+  "checks": [
+    {
+      "title": "Host and uptime",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "hostname; date; uptime; whoami; id"
+        ],
+        "returncode": 0,
+        "stdout": "Shashank\nMonday 26 October 2026 08:10:00 PM IST\n 20:10:00 up  4:54,  3 users,  load average: 0.73, 0.65, 1.01\nroot\nuid=0(root) gid=0(root) groups=0(root),979(ollama) context=unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "CPU and load",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "nproc; cat /proc/loadavg; ps -eo pid,ppid,user,%cpu,%mem,stat,comm --sort=-%cpu | head -n 11"
+        ],
+        "returncode": 0,
+        "stdout": "4\n0.73 0.65 1.01 1/1003 9503\n    PID    PPID USER     %CPU %MEM STAT COMMAND\n   9459       1 root     38.0  0.0 Ss   systemd-hostnam\n   6316    4365 admin    36.6  2.8 Sl   chrome\n   5037    4365 admin    24.3  4.6 Sl   chrome\n   4394    4362 admin    13.4  1.3 Sl   chrome\n   8764    4365 admin    13.0  4.1 Sl   chrome\n   3568    3435 admin    10.8  1.1 Ssl  gnome-shell\n   4586    4365 admin     9.1  2.2 Sl   chrome\n   4343    3568 admin     6.6  3.3 Sl   chrome\n   8032    6515 root      3.0  1.8 Sl+  python\n   5864    4365 admin     1.4  4.8 Sl   chrome",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Memory",
+      "data": {
+        "command": [
+          "free",
+          "-h"
+        ],
+        "returncode": 0,
+        "stdout": "total        used        free      shared  buff/cache   available\nMem:            15Gi       5.3Gi       8.4Gi       676Mi       2.5Gi       9.9Gi\nSwap:          7.8Gi          0B       7.8Gi",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Disk and inodes",
+      "data": {
+        "command": [
+          "bash",
+          "-lc",
+          "df -hT; echo; df -ih"
+        ],
+        "returncode": 0,
+        "stdout": "Filesystem          Type      Size  Used Avail Use% Mounted on\n/dev/mapper/cs-root xfs        70G   33G   38G  46% /\ndevtmpfs            devtmpfs  7.6G     0  7.6G   0% /dev\ntmpfs               tmpfs     7.7G   84K  7.7G   1% /dev/shm\nefivarfs            efivarfs  384K  237K  143K  63% /sys/firmware/efi/efivars\ntmpfs               tmpfs     3.1G   12M  3.1G   1% /run\ntmpfs               tmpfs     1.0M     0  1.0M   0% /run/credentials/systemd-journald.service\n/dev/loop0          squashfs  128K  128K     0 100% /var/lib/snapd/snap/bare/5\n/dev/loop1          squashfs  188M  188M     0 100% /var/lib/snapd/snap/chromium/3396\n/dev/loop2          squashfs  607M  607M     0 100% /var/lib/snapd/snap/gnome-46-2404/153\n/dev/loop3          squashfs   67M   67M     0 100% /var/lib/snapd/snap/core24/1643\n/dev/loop4          squashfs   50M   50M     0 100% /var/lib/snapd/snap/cups/1170\n/dev/sda2           xfs       960M  672M  289M  70% /boot\n/dev/loop5          squashfs   92M   92M     0 100% /var/lib/snapd/snap/gtk-common-themes/1535\n/dev/loop7          squashfs  395M  395M     0 100% /var/lib/snapd/snap/mesa-2404/1165\n/dev/loop6          squashfs   49M   49M     0 100% /var/lib/snapd/snap/snapd/26382\n/dev/loop9          squashfs   67M   67M     0 100% /var/lib/snapd/snap/core24/1587\n/dev/loop8          squashfs   74M   74M     0 100% /var/lib/snapd/snap/core22/2411\n/dev/loop10         squashfs   50M   50M     0 100% /var/lib/snapd/snap/snapd/26865\n/dev/sda1           vfat      599M  8.9M  590M   2% /boot/efi\n/dev/mapper/cs-home xfs       159G   54G  106G  34% /home\ntmpfs               tmpfs     1.6G  160K  1.6G   1% /run/user/1000\ntmpfs               tmpfs     1.6G   60K  1.6G   1% /run/user/0\n\nFilesystem          Inodes IUsed IFree IUse% Mounted on\n/dev/mapper/cs-root    35M  368K   35M    2% /\ndevtmpfs              1.9M   658  1.9M    1% /dev\ntmpfs                 2.0M     3  2.0M    1% /dev/shm\nefivarfs                 0     0     0     - /sys/firmware/efi/efivars\ntmpfs                 800K  1.5K  799K    1% /run\ntmpfs                 1.0K     2  1022    1% /run/credentials/systemd-journald.service\n/dev/loop0              29    29     0  100% /var/lib/snapd/snap/bare/5\n/dev/loop1             955   955     0  100% /var/lib/snapd/snap/chromium/3396\n/dev/loop2             23K   23K     0  100% /var/lib/snapd/snap/gnome-46-2404/153\n/dev/loop3             11K   11K     0  100% /var/lib/snapd/snap/core24/1643\n/dev/loop4            1.9K  1.9K     0  100% /var/lib/snapd/snap/cups/1170\n/dev/sda2             512K    39  512K    1% /boot\n/dev/loop5             75K   75K     0  100% /var/lib/snapd/snap/gtk-common-themes/1535\n/dev/loop7             796   796     0  100% /var/lib/snapd/snap/mesa-2404/1165\n/dev/loop6             617   617     0  100% /var/lib/snapd/snap/snapd/26382\n/dev/loop9             11K   11K     0  100% /var/lib/snapd/snap/core24/1587\n/dev/loop8             14K   14K     0  100% /var/lib/snapd/snap/core22/2411\n/dev/loop10            610   610     0  100% /var/lib/snapd/snap/snapd/26865\n/dev/sda1                0     0     0     - /boot/efi\n/dev/mapper/cs-home    80M   41K   80M    1% /home\ntmpfs                 391K   184  391K    1% /run/user/1000\ntmpfs                 391K    55  391K    1% /run/user/0",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Failed systemd units",
+      "data": {
+        "command": [
+          "systemctl",
+          "--failed",
+          "--no-pager",
+          "--full"
+        ],
+        "returncode": 0,
+        "stdout": "UNIT LOAD ACTIVE SUB DESCRIPTION\n\n0 loaded units listed.",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Recent system journal errors",
+      "data": {
+        "command": [
+          "journalctl",
+          "-p",
+          "err",
+          "-n",
+          "60",
+          "--no-pager"
+        ],
+        "returncode": 0,
+        "stdout": "Oct 26 20:45:06 Shashank kernel: x86/cpu: SGX disabled or unsupported by BIOS.\nOct 26 20:45:06 Shashank kernel: virt/tdx: TDX not supported by the host platform\nOct 26 20:45:06 Shashank kernel: intel-lpss INT3446:00: probe with driver intel-lpss failed with error -16\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: cnic\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: cnic_init\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: bnx2i\nOct 26 20:45:06 Shashank kernel: Warning: Unmaintained driver is detected: bnx2i_mod_init\nOct 26 20:45:06 Shashank systemd-udevd[547]: /etc/udev/rules.d/99-crc-vsock.rules:1 Unknown group 'libvirt', ignoring.\nOct 26 20:45:07 Shashank (udev-worker)[631]: event4: Failed to parse key identifier 'performance': Invalid argument\nOct 26 20:45:07 Shashank kernel: Warning: Unmaintained driver is detected: e1000_init_module\nOct 26 20:45:07 Shashank kernel: e1000e 0000:00:1f.6: probe with driver e1000e failed with error -2\nOct 26 15:15:11 Shashank (udev-worker)[1062]: event4: Failed to parse key identifier 'performance': Invalid argument\nOct 26 15:15:14 Shashank kernel: Bluetooth: hci0: Reading supported features failed (-16)\nOct 26 15:15:19 Shashank SetroubleshootPrivileged.py[1755]: failed to retrieve rpm info for path '/var/lib/selinux/targeted/active/modules/200/snappy':\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/.pwd.lock. For complete SELinux messages run: sealert -l a917baf8-9100-4781-a469-b57b3706bd10\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/NetworkManager. For complete SELinux messages run: sealert -l 97403079-5fd3-44d9-9f9b-31641a97fa28\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/adjtime. For complete SELinux messages run: sealert -l 73413f71-9326-4e45-9389-1880853c9009\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/aliases. For complete SELinux messages run: sealert -l f87eae27-ef36-4b66-822c-03a27a12d783\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/audit. For complete SELinux messages run: sealert -l 7e26c3af-3a54-4dde-9bc0-fce1cf8dd916\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/avahi. For complete SELinux messages run: sealert -l 6cabc53e-a38b-4a41-afbc-3cb964efc2cc\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/bluetooth. For complete SELinux messages run: sealert -l 2a8a6e56-4c1c-46fe-aff9-d334b8792dfc\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/containerd. For complete SELinux messages run: sealert -l d6fa386b-a3b1-434f-8e5c-eac649d02500\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/cron.d. For complete SELinux messages run: sealert -l e21f52a8-2b0c-41e3-a198-eba1be6f136b\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/crontab. For complete SELinux messages run: sealert -l cc71bee1-b881-4fab-9c6a-bd0ff5086b92\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/cups. For complete SELinux messages run: sealert -l 74900028-ed61-43d2-b0fa-e163ffa07eaf\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/dbus-1. For complete SELinux messages run: sealert -l 5360ebb4-52f8-44aa-bdfd-ae3d43534bab\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/dhcp. For complete SELinux messages run: sealert -l 63b11e89-aae5-4c4d-b910-383f2b5ea285\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/dnsmasq.conf. For complete SELinux messages run: sealert -l 8c0c363a-badf-48e9-b1d7-f0ca0266f9b1\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/dnsmasq.d. For complete SELinux messages run: sealert -l ba5f81a3-c9a9-49d0-a2f2-e38e833363fe\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/exports. For complete SELinux messages run: sealert -l 5bc79d85-2d58-4f7e-9fc0-1f71f7e96304\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/exports.d. For complete SELinux messages run: sealert -l caaadc41-f43c-4e40-b728-3d5eb7806aa8\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/firewalld. For complete SELinux messages run: sealert -l e754d611-2a00-48ce-892e-3a7ff04998c6\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/gdm. For complete SELinux messages run: sealert -l f853a561-5200-42f4-92a6-f9c13f35cf99\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/gshadow. For complete SELinux messages run: sealert -l 9bc984aa-cce3-4e88-9dbf-23516cf7626e\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/hostname. For complete SELinux messages run: sealert -l 31b351a2-fab0-4df3-8fe8-c653a51099aa\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/hosts. For complete SELinux messages run: sealert -l 59b7ad5d-9909-49b3-b393-ff94eccf8166\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/kdump.conf. For complete SELinux messages run: sealert -l 835f3f59-3dee-4fbf-a8fa-cee5fdd37f99\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/krb5.conf. For complete SELinux messages run: sealert -l a667f55c-3801-46bb-912c-bcde366d1ade\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/libvirt. For complete SELinux messages run: sealert -l d40b6e48-0b6d-409f-92be-6bfc94679247\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/lvm. For complete SELinux messages run: sealert -l 939a5ca1-83a0-4b4d-b1ce-090b43479f15\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/mcelog. For complete SELinux messages run: sealert -l c131b938-47dd-48af-996e-aca503f68935\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/mdevctl.d. For complete SELinux messages run: sealert -l 04987b47-6264-4ce8-86e8-a4af812a9af8\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/modprobe.d. For complete SELinux messages run: sealert -l 6d1d3925-178d-469f-ac4a-f79ad96a9df1\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/multipath. For complete SELinux messages run: sealert -l 5d6cccc8-7430-4706-906f-e2881682f633\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/pki. For complete SELinux messages run: sealert -l 7bb3c4f8-bf00-48b9-b1f5-2b3b745b2b56\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/printcap. For complete SELinux messages run: sealert -l 94f54d2d-0f10-4925-9922-8d8f2da27937\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/rsyncd.conf. For complete SELinux messages run: sealert -l b8654e9b-e3e3-4873-b6b7-b2a772a2c766\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /tmp/.snap/etc/rsyslog.conf. For complete SELinux messages run: sealert -l 3ef6b9c7-f5ad-4eae-bc98-a7b73904d40d\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/rsyslog.d. For complete SELinux messages run: sealert -l dab361d8-7659-4b98-8149-62cb087cd952\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/samba. For complete SELinux messages run: sealert -l 10aa5364-ff36-485a-a25c-92fc841c4938\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/sssd. For complete SELinux messages run: sealert -l fbe4f29f-fa9c-4ae2-8ec7-d3297e78503a\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/tuned. For complete SELinux messages run: sealert -l d2e9f84a-bb44-4501-93c0-6cbc09b73f0b\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/unbound. For complete SELinux messages run: sealert -l fdc4257a-450e-46aa-ac02-ec8ab7651f90\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the directory /tmp/.snap/etc/vmware-tools. For complete SELinux messages run: sealert -l c698f3b1-abb6-4a26-9a69-9220c73e1389\nOct 26 15:15:19 Shashank setroubleshoot[1650]: failed to retrieve rpm info for path '/var/snap/cups/common/etc/papersize':\nOct 26 15:15:19 Shashank setroubleshoot[1650]: SELinux is preventing /usr/libexec/snapd/snap-update-ns from getattr access on the file /var/snap/cups/common/etc/papersize. For complete SELinux messages run: sealert -l 3e5c666a-921b-41c4-bfcb-13d9bb0be932\nOct 26 15:16:50 Shashank gdm-password][3424]: gkr-pam: unable to locate daemon control file\nOct 26 15:16:58 Shashank gnome-session-binary[2440]: GLib-GObject-CRITICAL: instance with invalid (NULL) class pointer",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Service status summary",
+      "data": {
+        "command": [
+          "systemctl",
+          "--failed",
+          "--no-pager",
+          "--full"
+        ],
+        "returncode": 0,
+        "stdout": "UNIT LOAD ACTIVE SUB DESCRIPTION\n\n0 loaded units listed.",
+        "stderr": ""
+      }
+    },
+    {
+      "title": "Recent boot journal",
+      "data": {
+        "command": [
+          "journalctl",
+          "-b",
+          "-n",
+          "100",
+          "--no-pager"
+        ],
+        "returncode": 0,
+        "stdout": "Oct 26 18:18:49 Shashank wpa_supplicant[1546]: wlp2s0: RSN: Group rekeying completed with f0:ed:b8:fa:08:66 [GTK=CCMP]\nOct 26 18:48:56 Shashank systemd[3435]: Started ptyxis-spawn-cb7c91db-9dea-493d-bbcc-f0cad6bd304e.scope - [systemd-run] /usr/bin/bash.\nOct 26 18:59:57 Shashank ollama[1788]: time=2026-10-26T18:59:57.302+05:30 level=INFO source=model_recommendations.go:177 msg=\"model recommendations cache sleep scheduled\" wait=4h21m32.424952358s consecutive_failures=0\nOct 26 19:01:01 Shashank CROND[8521]: (root) CMD (run-parts /etc/cron.hourly)\nOct 26 19:01:01 Shashank run-parts[8524]: (/etc/cron.hourly) starting 0anacron\nOct 26 19:01:01 Shashank run-parts[8530]: (/etc/cron.hourly) finished 0anacron\nOct 26 19:01:01 Shashank CROND[8520]: (root) CMDEND (run-parts /etc/cron.hourly)\nOct 26 19:10:15 Shashank cupsd[1563]: REQUEST localhost - - \"POST / HTTP/1.1\" 200 184 Renew-Subscription successful-ok\nOct 26 19:15:17 Shashank cups.cups-browsed[1748]: + true\nOct 26 19:15:17 Shashank cups.cups-browsed[1748]: + sleep 3600\nOct 26 19:18:51 Shashank wpa_supplicant[1546]: wlp2s0: RSN: Group rekeying completed with f0:ed:b8:fa:08:66 [GTK=CCMP]\nOct 26 19:19:26 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-BEACON-LOSS\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1591] device (wlp2s0): ip:dhcp4: restarting\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1608] dhcp4 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1609] dhcp4 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1609] dhcp4 (wlp2s0): state changed no lease\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1611] dhcp4 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1650] device (wlp2s0): ip:dhcp6: restarting\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1652] dhcp6 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1674] dhcp6 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1674] dhcp6 (wlp2s0): state changed no lease\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.1676] dhcp6 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:26 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-DISCONNECTED bssid=f0:ed:b8:fa:08:66 reason=4 locally_generated=1\nOct 26 19:19:26 Shashank wpa_supplicant[1546]: wlp2s0: Added BSSID f0:ed:b8:fa:08:66 into ignore list, ignoring for 10 seconds\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.2212] device (wlp2s0): supplicant interface state: completed -> disconnected\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.2226] device (p2p-dev-wlp2s0): supplicant management interface state: completed -> disconnected\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.3152] device (wlp2s0): supplicant interface state: disconnected -> scanning\nOct 26 19:19:26 Shashank NetworkManager[1412]: <info>  [1793022566.3153] device (p2p-dev-wlp2s0): supplicant management interface state: disconnected -> scanning\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: Removed BSSID f0:ed:b8:fa:08:66 from ignore list (clear)\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: SME: Trying to authenticate with f0:ed:b8:fa:08:66 (SSID='JioFiber-ktJDx_5G' freq=5220 MHz)\nOct 26 19:19:27 Shashank kernel: wlp2s0: authenticate with f0:ed:b8:fa:08:66 (local address=90:61:ae:3b:20:db)\nOct 26 19:19:27 Shashank kernel: wlp2s0: send auth to f0:ed:b8:fa:08:66 (try 1/3)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.4948] device (wlp2s0): supplicant interface state: scanning -> authenticating\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.4950] device (p2p-dev-wlp2s0): supplicant management interface state: scanning -> authenticating\nOct 26 19:19:27 Shashank kernel: wlp2s0: authenticated\nOct 26 19:19:27 Shashank kernel: wlp2s0: associate with f0:ed:b8:fa:08:66 (try 1/3)\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: Trying to associate with f0:ed:b8:fa:08:66 (SSID='JioFiber-ktJDx_5G' freq=5220 MHz)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5003] device (wlp2s0): supplicant interface state: authenticating -> associating\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5004] device (p2p-dev-wlp2s0): supplicant management interface state: authenticating -> associating\nOct 26 19:19:27 Shashank kernel: wlp2s0: RX AssocResp from f0:ed:b8:fa:08:66 (capab=0x1111 status=0 aid=2)\nOct 26 19:19:27 Shashank kernel: wlp2s0: associated\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: Associated with f0:ed:b8:fa:08:66\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-SUBNET-STATUS-UPDATE status=0\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5116] device (wlp2s0): supplicant interface state: associating -> associated\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.5117] device (p2p-dev-wlp2s0): supplicant management interface state: associating -> associated\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: WPA: Key negotiation completed with f0:ed:b8:fa:08:66 [PTK=CCMP GTK=CCMP]\nOct 26 19:19:27 Shashank wpa_supplicant[1546]: wlp2s0: CTRL-EVENT-CONNECTED - Connection to f0:ed:b8:fa:08:66 completed [id=0 id_str=]\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8475] device (wlp2s0): supplicant interface state: associated -> completed\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8566] device (wlp2s0): ip:dhcp4: restarting\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8623] dhcp4 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8684] dhcp4 (wlp2s0): state changed no lease\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8686] dhcp4 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8689] device (wlp2s0): ip:dhcp6: restarting\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8691] dhcp6 (wlp2s0): canceled DHCP transaction\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8691] dhcp6 (wlp2s0): state changed no lease\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8734] dhcp6 (wlp2s0): activation: beginning transaction (timeout in 45 seconds)\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8737] device (p2p-dev-wlp2s0): supplicant management interface state: associated -> completed\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8836] dhcp6 (wlp2s0): state changed new lease\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8870] dhcp4 (wlp2s0): state changed new lease, address=192.168.29.66, acd pending\nOct 26 19:19:27 Shashank NetworkManager[1412]: <info>  [1793022567.8880] dhcp4 (wlp2s0): state changed new lease, address=192.168.29.66\nOct 26 19:19:27 Shashank systemd[1]: Starting NetworkManager-dispatcher.service - Network Manager Script Dispatcher Service...\nOct 26 19:19:27 Shashank systemd[1]: Started NetworkManager-dispatcher.service - Network Manager Script Dispatcher Service.\nOct 26 19:19:38 Shashank systemd[1]: NetworkManager-dispatcher.service: Deactivated successfully.\nOct 26 19:24:30 Shashank google-chrome.desktop[4350]: [4343:4343:1026/192430.654012:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.\nOct 26 19:25:01 Shashank google-chrome.desktop[4350]: [4343:4343:1026/192501.033767:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.\nOct 26 19:25:04 Shashank google-chrome.desktop[4350]: [4343:4343:1026/192504.503604:ERROR:chrome/browser/ui/webui/ntp/new_tab_ui.cc:54] Requested load of chrome://newtab/ for incorrect profile type.\nOct 26 19:37:14 Shashank systemd[1]: Starting dnf-makecache.service - dnf makecache...\nOct 26 19:37:15 Shashank dnf[8988]: CentOS Stream 10 - BaseOS                        21 kB/s | 2.1 kB     00:00\nOct 26 19:37:15 Shashank dnf[8988]: CentOS Stream 10 - AppStream                     27 kB/s | 2.1 kB     00:00\nOct 26 19:37:15 Shashank dnf[8988]: CentOS Stream 10 - Extras packages               12 kB/s | 5.6 kB     00:00\nOct 26 19:37:15 Shashank dnf[8988]: Docker CE Stable - x86_64                        23 kB/s | 2.0 kB     00:00\nOct 26 19:37:16 Shashank dnf[8988]: Extra Packages for Enterprise Linux 10 - x86_64  30 kB/s | 6.9 kB     00:00\nOct 26 19:37:16 Shashank dnf[8988]: google-chrome                                   7.6 kB/s | 1.3 kB     00:00\nOct 26 19:37:16 Shashank dnf[8988]: Metadata cache created.\nOct 26 19:37:16 Shashank systemd[1]: dnf-makecache.service: Deactivated successfully.\nOct 26 19:37:16 Shashank systemd[1]: Finished dnf-makecache.service - dnf makecache.\nOct 26 19:37:16 Shashank systemd[1]: dnf-makecache.service: Consumed 1.324s CPU time, 106.4M memory peak.\nOct 26 19:57:09 Shashank systemd[1]: Starting fwupd-refresh.service - Refresh fwupd metadata and update motd...\nOct 26 19:57:10 Shashank systemd[1]: fwupd-refresh.service: Deactivated successfully.\nOct 26 19:57:10 Shashank systemd[1]: Finished fwupd-refresh.service - Refresh fwupd metadata and update motd.\nOct 26 20:00:05 Shashank systemd[1]: Starting fprintd.service - Fingerprint Authentication Daemon...\nOct 26 20:00:05 Shashank systemd[1]: Started fprintd.service - Fingerprint Authentication Daemon.\nOct 26 20:00:13 Shashank sudo[9202]:    admin : TTY=pts/0 ; PWD=/home/admin/pilot-linux/src/pilot ; USER=root ; COMMAND=/bin/su\nOct 26 20:00:13 Shashank systemd-logind[1424]: Existing logind session ID 3 used by new audit session, ignoring.\nOct 26 20:00:13 Shashank systemd-logind[1424]: New session c3 of user root.\nOct 26 20:00:13 Shashank systemd[1]: Started session-c3.scope - Session c3 of User root.\nOct 26 20:00:13 Shashank sudo[9202]: pam_unix(sudo:session): session opened for user root(uid=0) by admin(uid=1000)\nOct 26 20:00:13 Shashank su[9214]: (to root) root on pts/4\nOct 26 20:00:13 Shashank su[9214]: pam_unix(su:session): session opened for user root(uid=0) by admin(uid=0)\nOct 26 20:00:35 Shashank systemd[1]: fprintd.service: Deactivated successfully.\nOct 26 20:01:01 Shashank CROND[9268]: (root) CMD (run-parts /etc/cron.hourly)\nOct 26 20:01:01 Shashank run-parts[9271]: (/etc/cron.hourly) starting 0anacron\nOct 26 20:01:01 Shashank run-parts[9277]: (/etc/cron.hourly) finished 0anacron\nOct 26 20:01:01 Shashank CROND[9267]: (root) CMDEND (run-parts /etc/cron.hourly)\nOct 26 20:08:35 Shashank cupsd[1563]: REQUEST localhost - - \"POST / HTTP/1.1\" 200 184 Renew-Subscription successful-ok\nOct 26 20:09:18 Shashank systemd[1]: Starting systemd-hostnamed.service - Hostname Service...\nOct 26 20:09:18 Shashank systemd[1]: Started systemd-hostnamed.service - Hostname Service.\nOct 26 20:09:48 Shashank systemd[1]: systemd-hostnamed.service: Deactivated successfully.\nOct 26 20:09:59 Shashank systemd[1]: Starting systemd-hostnamed.service - Hostname Service...\nOct 26 20:10:00 Shashank systemd[1]: Started systemd-hostnamed.service - Hostname Service.",
+        "stderr": ""
+      }
+    }
+  ],
+  "nonzero_checks": [],
+  "stderr_findings": []
+}
+========================================================================

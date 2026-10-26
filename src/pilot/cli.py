@@ -275,7 +275,7 @@ class PilotShell(cmd.Cmd):
  PILOT - Linux Monitoring & Troubleshooting Shell
  Type 'help' to see commands. Type 'exit' to quit.
  Created by :- Shashank joshi
- Pilot version :- 1.2.0
+ Pilot version :- 1.3.0
 =================================================
 """
     prompt = "pilot> "
@@ -678,6 +678,207 @@ class PilotShell(cmd.Cmd):
             print(f"SCP failed with exit code {rc}. Check hostname, SSH access, remote path and destination permissions.")
         self.add_report("SCP remote-to-local", {"remote": remote, "local": local, "returncode": rc})
 
+    def do_troubleshoot(self, arg):
+        """Run targeted diagnostics and save a concise summary. Usage: troubleshoot <problem description>"""
+        query = arg.strip()
+        if not query:
+            print("Usage: troubleshoot <problem description>")
+            print("Examples: troubleshoot permission denied for user admin in /etc")
+            print("          troubleshoot apache is down")
+            return
+
+        qlow = query.casefold()
+        checks = []
+        findings = []
+        recommendations = []
+
+        def check(title, command, timeout=15, interpretation=None):
+            rc, out, err = run_command(command, timeout=timeout)
+            item = {"title": title, "command": command, "returncode": rc,
+                    "stdout": out, "stderr": err}
+            if interpretation:
+                item["interpretation"] = interpretation(rc, out, err)
+            checks.append(item)
+            return item
+
+        def show_check(item):
+            print(f"\n--- {item['title']} ---")
+            output = item.get("stdout") or item.get("stderr") or "(no output)"
+            print(output[:6000])
+            if item.get("interpretation"):
+                print("Finding: " + item["interpretation"])
+
+        print(f"\nPILOT TROUBLESHOOTING: {query}")
+        check("Host and current identity", ["bash", "-lc", "hostname; date; id"], 10)
+
+        # Targeted permission diagnostics.
+        permission_terms = ("permission" in qlow or "denied" in qlow or "access denied" in qlow)
+        if permission_terms:
+            user_match = re.search(r"\buser\s+([a-zA-Z_][a-zA-Z0-9_.-]*)", query, re.I)
+            username = user_match.group(1) if user_match else ("admin" if re.search(r"\badmin\b", qlow) else None)
+            path_match = re.search(r"(/[A-Za-z0-9_./@:+-]+)", query)
+            target_text = path_match.group(1).rstrip(".,;:") if path_match else None
+            if not target_text and re.search(r"\b(in|under|at)\s+/?etc\b", qlow):
+                target_text = "/etc"
+            if not target_text and re.search(r"\betc\b", qlow):
+                target_text = "/etc"
+            target = path_from_arg(target_text) if target_text else None
+
+            if username:
+                item = check("Account identity and group membership", ["id", username], 10)
+                if item["returncode"] == 0:
+                    findings.append(f"Account '{username}' exists and its identity/groups were retrieved.")
+                else:
+                    findings.append(f"Could not resolve user '{username}' using id; verify the account name and identity provider.")
+            else:
+                findings.append("No specific affected username was identified in the request.")
+
+            if target:
+                item = check("Target ownership and permissions", ["ls", "-ld", "--", str(target)])
+                show_check(item)
+                item = check("Permissions on every path component", ["namei", "-l", str(target)])
+                show_check(item)
+                if shutil.which("getfacl"):
+                    item = check("Access control list (ACL)", ["getfacl", "-p", str(target)])
+                    show_check(item)
+                else:
+                    findings.append("getfacl is unavailable; ACL details were not checked.")
+                if shutil.which("ls"):
+                    item = check("SELinux file context", ["ls", "-Zd", "--", str(target)])
+                    show_check(item)
+                if shutil.which("findmnt"):
+                    item = check("Filesystem mount options", ["findmnt", "-T", str(target), "-o", "TARGET,SOURCE,FSTYPE,OPTIONS"])
+                    show_check(item)
+
+                if username:
+                    # runuser runs the permission tests as the affected user, rather than as PILOT's caller.
+                    if shutil.which("runuser"):
+                        for access, flag in (("read/list", "-r"), ("write", "-w"), ("traverse/execute", "-x")):
+                            test_item = check(f"Access test as {username}: {access}",
+                                              ["runuser", "-u", username, "--", "test", flag, str(target)], 10)
+                            if test_item["returncode"] == 0:
+                                test_item["interpretation"] = f"User {username} has {access} access to {target}."
+                            elif test_item["returncode"] == 1:
+                                test_item["interpretation"] = f"User {username} does not have {access} access to {target} (or the access test is blocked)."
+                            else:
+                                test_item["interpretation"] = f"Access test could not be completed (exit {test_item['returncode']}); check account resolution and privileges."
+                            findings.append(test_item["interpretation"])
+                            show_check(test_item)
+                    else:
+                        findings.append("runuser is unavailable, so effective access could not be tested as the affected user.")
+
+                # /etc itself is usually readable/traversable but not writable by ordinary users.
+                if str(target) == "/etc":
+                    findings.append("The target is /etc itself. It is normal for a non-root account to be unable to modify this system directory; specify the exact file and operation to diagnose a particular failure.")
+                recommendations.extend([
+                    "Check the exact file and operation (read, edit, execute, or directory access); /etc alone may be too broad to identify the cause.",
+                    "Review ownership/mode bits, every parent directory, ACL entries/masks, SELinux AVC records, and mount options before changing permissions.",
+                    "Do not use chmod -R 777 /etc or disable SELinux as a troubleshooting shortcut."
+                ])
+            else:
+                findings.append("No exact path was identified, so path ownership, ACL, SELinux context, and effective access could not be tested.")
+                recommendations.append("Re-run with the exact path, for example: troubleshoot permission denied for user admin in /etc/ssh/sshd_config")
+
+            if shutil.which("getenforce"):
+                item = check("SELinux enforcement mode", ["getenforce"])
+                show_check(item)
+            if shutil.which("ausearch"):
+                item = check("Recent SELinux AVC denials", ["ausearch", "-m", "AVC", "-ts", "recent", "-i"], 20)
+                show_check(item)
+                if "denied" in (item.get("stdout", "") + item.get("stderr", "")).casefold():
+                    findings.append("Recent SELinux AVC records were queried; correlate their process and path with the reported failure before attributing cause.")
+
+        # Service-specific diagnostics, including RHEL/CentOS Apache's httpd unit.
+        service = None
+        if any(word in qlow for word in ("apache", "httpd", "web server")):
+            service = "httpd"
+        elif "nginx" in qlow:
+            service = "nginx"
+        elif re.search(r"\b(ssh|sshd)\b", qlow):
+            service = "sshd"
+        elif "docker" in qlow or "container" in qlow:
+            service = "docker"
+        if service:
+            item = check(f"{service} service status", ["systemctl", "status", service, "--no-pager", "--full"], 15)
+            show_check(item)
+            if item["returncode"] != 0:
+                findings.append(f"systemctl status for {service} returned exit code {item['returncode']}; inspect the status output for inactive, failed, or missing-unit details.")
+            item = check(f"{service} recent journal", ["journalctl", "-u", service, "-n", "80", "--no-pager"], 15)
+            show_check(item)
+            if service == "httpd":
+                if shutil.which("httpd"):
+                    item = check("Apache configuration syntax", ["httpd", "-t"], 15)
+                    show_check(item)
+                    if item["returncode"] != 0:
+                        findings.append("Apache configuration syntax test failed; fix the reported configuration error before restarting httpd.")
+                elif shutil.which("apachectl"):
+                    item = check("Apache configuration syntax", ["apachectl", "configtest"], 15)
+                    show_check(item)
+                item = check("Listening TCP ports", ["ss", "-lntp"], 10)
+                show_check(item)
+                if shutil.which("curl"):
+                    item = check("Local HTTP response", ["curl", "-sS", "-I", "--max-time", "5", "http://127.0.0.1/"], 8)
+                    show_check(item)
+                    if item["returncode"] != 0:
+                        findings.append("Local HTTP request to 127.0.0.1 failed; check whether httpd is running, listening, and configured for HTTP on port 80.")
+            elif service == "nginx" and shutil.which("nginx"):
+                item = check("Nginx configuration syntax", ["nginx", "-t"], 15)
+                show_check(item)
+            elif service == "docker":
+                item = check("Docker daemon info", ["docker", "info"], 15)
+                show_check(item)
+            if not findings:
+                findings.append(f"Collected service-specific checks for {service}; review the command output for the cause.")
+
+        # General, read-only system checks for other problem descriptions.
+        if not permission_terms and not service:
+            for title, command in [
+                ("CPU/load", ["bash", "-lc", "uptime; ps -eo pid,ppid,user,%cpu,%mem,stat,comm --sort=-%cpu | head -n 6"]),
+                ("Memory", ["free", "-h"]),
+                ("Disk usage", ["df", "-hT"]),
+                ("Failed systemd units", ["systemctl", "--failed", "--no-pager"]),
+                ("Recent system journal errors", ["journalctl", "-p", "err", "-n", "40", "--no-pager"]),
+            ]:
+                item = check(title, command, 20)
+                show_check(item)
+            findings.append("General system checks completed; no single root cause is inferred without a symptom-specific test.")
+
+        # Concise user-facing summary and durable JSON/text report.
+        print("\nTROUBLESHOOTING SUMMARY")
+        print(f"Problem: {query}")
+        print(f"Diagnostic checks run: {len(checks)}")
+        for finding in findings:
+            print(f"- {finding}")
+        if recommendations:
+            print("Recommended next steps:")
+            for recommendation in dict.fromkeys(recommendations):
+                print(f"- {recommendation}")
+
+        result = {"query": query, "checks": checks, "findings": findings,
+                  "recommendations": list(dict.fromkeys(recommendations))}
+        self.add_report("Targeted troubleshooting", result)
+        REPORT_DIR.mkdir(parents=True, exist_ok=True)
+        stamp = dt.datetime.now().strftime("%Y%m%d_%H%M%S")
+        json_path = REPORT_DIR / f"pilot_troubleshoot_{stamp}.json"
+        text_path = REPORT_DIR / f"pilot_troubleshoot_{stamp}.txt"
+        try:
+            json_path.write_text(json.dumps({"tool": "PILOT", "generated_at": dt.datetime.now().astimezone().isoformat(), **result}, indent=2, default=str) + "\n", encoding="utf-8")
+            summary_lines = ["PILOT TROUBLESHOOTING SUMMARY", f"Generated: {dt.datetime.now().astimezone().isoformat()}", f"Problem: {query}", f"Diagnostic checks run: {len(checks)}", "", "FINDINGS:"]
+            summary_lines.extend(f"- {x}" for x in findings)
+            if recommendations:
+                summary_lines.extend(["", "RECOMMENDED NEXT STEPS:"])
+                summary_lines.extend(f"- {x}" for x in dict.fromkeys(recommendations))
+            summary_lines.extend(["", "CHECK DETAILS:"])
+            for item in checks:
+                summary_lines.extend([f"\n[{item['title']}]", f"Command: {' '.join(item['command'])}", f"Exit code: {item['returncode']}", item.get("stdout") or item.get("stderr") or "(no output)"])
+                if item.get("interpretation"):
+                    summary_lines.append("Finding: " + item["interpretation"])
+            text_path.write_text("\n".join(summary_lines) + "\n", encoding="utf-8")
+            print(f"\nJSON report: {json_path.resolve()}")
+            print(f"Text summary: {text_path.resolve()}")
+        except OSError as exc:
+            print(f"Could not save troubleshooting report: {exc}")
+
     def do_reason(self, arg):
         """Diagnose permission denied on a file/directory. Usage: reason permission denied <path>"""
         try:
@@ -760,6 +961,8 @@ Examples:
   sar -u 1 3                   Show CPU stats for 3 samples (requires sysstat)
   load                         Load averages and normalized load percentages
   reason permission denied /var/www/html
+  troubleshoot permission denied for user admin in /etc
+  troubleshoot apache is down
   scpget admin@server:/var/log/app.log ./app.log
   ram [application]            Overall RAM + top 5 RAM processes
   cpu [application]            Overall CPU + top 5 CPU processes

@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: pilot-linux
-Version: 1.1.0
+Version: 1.2.0
 Summary: Linux system monitoring and troubleshooting toolkit
 Author: Shashank joshi
 License-Expression: Apache-2.0
@@ -8,127 +8,522 @@ Project-URL: Homepage, https://github.com/shashank261289/PILOT---Linux-Monitorin
 Project-URL: Repository, https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell.git
 Project-URL: Bug Tracker, https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell/issues
 Project-URL: Documentation, https://github.com/shashank261289/PILOT---Linux-Monitoring-Troubleshooting-Shell/blob/main/README.md
-Keywords: linux,devops,monitoring,troubleshooting,sysadmin
+Keywords: linux,devops,monitoring,troubleshooting,sysadmin,commands,automation
 Classifier: Environment :: Console
 Classifier: Operating System :: POSIX :: Linux
 Classifier: Programming Language :: Python :: 3
 Requires-Python: >=3.9
 Description-Content-Type: text/markdown
+License-File: LICENSE
+Dynamic: license-file
 
-# PilotShell
+# PILOT — Linux Monitoring & Troubleshooting Toolkit
 
-**PILOT** is an interactive, light-weight Linux Monitoring & Troubleshooting Shell designed to assist system administrators in diagnosing system performance, running services, and storage health.
+**PILOT** is a command-line Linux monitoring and troubleshooting toolkit designed to help Linux administrators, DevOps engineers, and system engineers diagnose common server issues quickly.
+
+It brings frequently used Linux troubleshooting tasks into a single command-line interface.
 
 ## Features
 
-- **Interactive CLI Environment:** Implements a full command loop built on top of `cmd.Cmd`.
-- **Disk Health Monitoring:** Instantly track partition utilization with configurable usage warning thresholds.
-- **Process Profiling:** Quickly locate and trace system processes by application name, tracking memory and CPU metrics.
-- **Systemd Service Inspection:** Seamlessly query, search, and detail active and inactive services directly from the prompt.
-- **JSON Telemetry Report:** Keeps a persistent structure of all checks compiled during the active diagnostic session.
+- **CPU Monitoring** — Display CPU utilization and the top 5 CPU-consuming processes.
+- **RAM Monitoring** — Display memory utilization and the top 5 memory-consuming processes.
+- **Process Search** — Find running processes by application name.
+- **Disk Monitoring** — Display mounted partitions and filter them by utilization percentage.
+- **LVM Analysis** — Inspect logical volumes, volume groups, and available space when supported.
+- **Large File Analysis** — Find the top 5 largest files and directories under a specified path.
+- **Log Error Search** — Search log files and directories for errors.
+- **File Search** — Find files by name or extension.
+- **Text Search** — Search for specific text inside files.
+- **Load Average** — Display 1-, 5-, and 15-minute load averages.
+- **Last Login** — Inspect recent login information.
+- **SAR Monitoring** — Run system activity reports when `sysstat` is installed.
+- **Permission Troubleshooting** — Investigate common causes of `Permission denied` errors.
+- **Systemd Service Search** — Search for services and inspect matching service status.
+- **Remote File Copy** — Retrieve files from remote servers using SCP.
+- **JSON Reports** — Save supported diagnostic results to a report file.
+
+> **Safety first:** PILOT provides diagnostic information and may suggest corrective commands. Review suggested commands before executing them. Disk resizing and other potentially disruptive operations should never be performed without verification and appropriate backups.
 
 ## Installation
 
-Install directly from PyPI:
+Install PILOT using pip:
 
 ```bash
-pip install pilotshell
+python3 -m pip install pilot-linux
 ```
 
-## Quick Start
-
-Launch the pilot terminal environment using the global command-line shortcut:
+Verify the installation:
 
 ```bash
+python3 -m pip show pilot-linux
+command -v pilot
 pilot
 ```
 
-Once inside the interactive environment, view available monitoring tools:
+If the `pilot` command is not found, check whether the installation directory is included in your `PATH`.
 
-```text
-=================================================
- PILOT - Linux Monitoring & Troubleshooting Shell
- Type 'help' to see commands. Type 'exit' to quit.
-=================================================
-pilot> help
-```
-
-### Example Commands
-
-Check filesystem status with an explicit warning threshold (e.g., alert at 75% capacity):
-```text
-pilot> disk --threshold=75
-```
-
-
-## Running PILOT as Root
-
-PILOT can be installed system-wide and run by both normal users and the root user. On some Linux systems, `/usr/local/bin` may be missing from root's `PATH`.
-
-### 1. Verify the Installation
+For a standard system-wide installation, the executable may be located at:
 
 ```bash
-which pilot
+/usr/local/bin/pilot
+```
+
+### Fix PATH for the root user
+
+If the command works for a normal user but not for root, check:
+
+```bash
 ls -l /usr/local/bin/pilot
+echo "$PATH"
 ```
 
-### 2. Fix `pilot: command not found` for Root
-
-Switch to the root user:
-
-```bash
-sudo -i
-```
-
-Add `/usr/local/bin` to the current root shell's `PATH`:
+For the current root session:
 
 ```bash
 export PATH="/usr/local/bin:$PATH"
 ```
 
-Verify that the command is available:
-
-```bash
-command -v pilot
-pilot
-```
-
-Expected command location:
-
-```text
-/usr/local/bin/pilot
-```
-
-### 3. Make the PATH Fix Permanent
-
-For the root user's Bash shell, run:
+To persist this setting for root's Bash shell:
 
 ```bash
 echo 'export PATH="/usr/local/bin:$PATH"' >> /root/.bashrc
 source /root/.bashrc
 ```
 
-Verify:
+This adds `/usr/local/bin` to root's PATH. If PILOT was installed in a different location, use that location instead.
+
+## Usage
+
+Run the following commands in your terminal.
+
+### 1. CPU Monitoring
+
+Display CPU utilization and the top 5 CPU-consuming processes:
+
+```bash
+pilot cpu
+```
+
+Filter CPU-consuming processes by application name:
+
+```bash
+pilot cpu apache
+pilot cpu python
+```
+
+### 2. RAM Monitoring
+
+Display memory utilization and the top 5 memory-consuming processes:
+
+```bash
+pilot ram
+```
+
+Filter processes by application name:
+
+```bash
+pilot ram apache
+pilot ram python
+```
+
+### 3. Process Search
+
+Display running processes:
+
+```bash
+pilot ps
+```
+
+Search for a process by name:
+
+```bash
+pilot ps apache
+pilot ps nginx
+```
+
+If your implementation supports command-style arguments, you can also use:
+
+```bash
+pilot ps -ef Apache
+```
+
+### 4. Disk Monitoring
+
+Display all mounted partitions:
+
+```bash
+pilot disk
+```
+
+Display partitions with utilization greater than 70%:
+
+```bash
+pilot disk 70%
+```
+
+Check a specific path against an 80% utilization threshold:
+
+```bash
+pilot disk /var 80%
+```
+
+The threshold filters should report only partitions that exceed the specified percentage. Confirm the exact syntax supported by your installed version.
+
+### 5. LVM and Disk Space Troubleshooting
+
+When a partition is running out of space, inspect the filesystem and storage layout:
+
+```bash
+df -hT
+lsblk -f
+sudo pvs
+sudo vgs
+sudo lvs
+```
+
+If the affected filesystem uses LVM, check the free space available in its volume group before considering an extension.
+
+Example of a **suggested command only**:
+
+```bash
+sudo lvextend -r -L +1G /dev/vg_name/lv_name
+```
+
+Replace the example device path with the verified logical volume. Confirm that the volume group has sufficient free space, the filesystem supports the operation, and suitable backups exist.
+
+**Do not execute storage changes blindly.** PILOT should present recommendations for review rather than automatically extending volumes.
+
+### 6. Find Large Files and Directories
+
+Find the largest files and directories under `/var`:
+
+```bash
+pilot bigfiles /var
+```
+
+You can change the target path:
+
+```bash
+pilot bigfiles /home
+pilot bigfiles /opt
+```
+
+Use caution before deleting large files, particularly application logs and database files.
+
+### 7. Search Logs for Errors
+
+Search a specific log file:
+
+```bash
+pilot check error /var/log/messages
+```
+
+Search a log directory:
+
+```bash
+pilot check error /var/log
+```
+
+Log locations differ between Linux distributions. For example, some systems use `/var/log/messages`, while others use `/var/log/syslog` or the systemd journal.
+
+### 8. Find Files by Name
+
+Find configuration files under `/etc`:
+
+```bash
+pilot findfile '*.conf' /etc
+```
+
+Find shell scripts under `/opt`:
+
+```bash
+pilot findfile '*.sh' /opt
+```
+
+Quote wildcard patterns so your shell does not expand them before PILOT receives them.
+
+### 9. Search for Text in Files
+
+Search for a connection error:
+
+```bash
+pilot findtext 'connection refused' /var/log
+```
+
+Search for a specific message elsewhere:
+
+```bash
+pilot findtext 'Out of memory' /var/log
+```
+
+Searching protected files may require appropriate privileges.
+
+### 10. Investigate Permission Denied Errors
+
+Diagnose a directory permission problem:
+
+```bash
+pilot reason permission denied /var/www/html
+```
+
+Diagnose a file permission problem:
+
+```bash
+pilot reason permission denied /path/to/file
+```
+
+A useful permission investigation can include:
+
+- File and directory ownership.
+- Read, write, and execute permissions.
+- Parent-directory traversal permissions.
+- Effective user and group membership.
+- Access Control Lists (ACLs).
+- SELinux labels and relevant audit messages.
+- Read-only mount options and immutable file attributes.
+- The account under which the application or service runs.
+
+Useful manual checks include:
+
+```bash
+id
+namei -l /var/www/html
+ls -ld /var /var/www /var/www/html
+getfacl /var/www/html
+ls -Z /var/www/html
+findmnt -T /var/www/html
+```
+
+Some commands or utilities may not be installed on every distribution.
+
+**Security recommendation:** Do not use `chmod -R 777` or disable SELinux as a default fix. Identify and correct the actual cause of the access failure.
+
+### 11. Check System Load
+
+Display system load averages:
+
+```bash
+pilot load
+```
+
+Load averages represent the average number of tasks running or waiting for CPU and, on Linux, certain uninterruptible tasks. They are not the same as CPU utilization.
+
+Compare the load averages with the number of available CPU cores and investigate processes, I/O waits, and system activity when necessary.
+
+### 12. View Last Login Information
+
+Display available last-login records:
+
+```bash
+pilot lastlog
+```
+
+Check a specific user:
+
+```bash
+pilot lastlog root
+```
+
+Output depends on the distribution, available login records, and user privileges.
+
+### 13. Run SAR System Activity Reports
+
+Example command:
+
+```bash
+pilot sar -u 1 3
+```
+
+This requests CPU activity statistics at one-second intervals for three reports, if the PILOT implementation forwards the arguments to `sar`.
+
+On RHEL, CentOS Stream, and compatible distributions, install `sysstat` if necessary:
+
+```bash
+sudo dnf install sysstat
+```
+
+On Debian or Ubuntu:
+
+```bash
+sudo apt install sysstat
+```
+
+Historical reports may require system activity data collection to be enabled.
+
+### 14. Search and Check Services
+
+Search for a service:
+
+```bash
+pilot service sshd
+```
+
+Search for a web server service:
+
+```bash
+pilot service apache
+```
+
+Search using another service name or description:
+
+```bash
+pilot service nginx
+```
+
+If multiple services match, select the exact service unit before taking action. Service names differ between distributions.
+
+Useful manual checks:
+
+```bash
+systemctl status sshd
+systemctl list-units --type=service
+systemctl list-unit-files --type=service
+```
+
+### 15. Copy Files from a Remote Server
+
+Retrieve a remote log file:
+
+```bash
+pilot scpget admin@server:/var/log/app.log ./app.log
+```
+
+Replace `admin`, `server`, and the remote file path with the correct values.
+
+The remote host must be reachable, SSH authentication must be configured, and the local destination must be writable. Never place passwords or private keys directly in shared scripts or public repositories.
+
+### 16. Generate Diagnostic Reports
+
+Generate a report using the default filename:
+
+```bash
+pilot report
+```
+
+Specify a report filename:
+
+```bash
+pilot report health-check.json
+```
+
+If supported by the installed version, the report is saved in the `pilot_reports/` directory by default.
+
+JSON reports can be used for troubleshooting records, automation, and further analysis. Review the report before sharing it because system information, usernames, hostnames, and file paths may be sensitive.
+
+### 17. Help and Exit
+
+Display the available commands:
+
+```bash
+pilot helpme
+```
+
+Exit the interactive interface:
+
+```bash
+pilot exit
+```
+
+Use the commands and argument syntax supported by your installed PILOT version.
+
+## Recommended Dependencies
+
+PILOT's requirements depend on which features are enabled.
+
+| Utility | Purpose |
+|---|---|
+| `ps` / `procps-ng` | Process information |
+| `df`, `findmnt`, `lsblk` | Filesystem and storage diagnostics |
+| `lvm2` | LVM inspection |
+| `sysstat` | `sar` system activity reports |
+| `openssh-clients` or `openssh-client` | SCP and SSH connectivity |
+| `acl` | ACL inspection with `getfacl` |
+| SELinux utilities | SELinux context and troubleshooting checks |
+
+On RHEL/CentOS Stream:
+
+```bash
+sudo dnf install procps-ng util-linux lvm2 sysstat openssh-clients acl
+```
+
+Install additional SELinux troubleshooting utilities if needed and available for your distribution.
+
+## Troubleshooting
+
+### `pilot: command not found`
+
+Check the installed executable:
 
 ```bash
 command -v pilot
+python3 -m pip show pilot-linux
 ```
 
-### 4. Troubleshooting
+If necessary, inspect the installation location and update `PATH`.
 
-If the command is still unavailable, run:
+### Permission errors
+
+Use the least privileges necessary. Some diagnostics require elevated privileges, but do not run the entire toolkit as root unless required.
+
+### Missing commands
+
+Install the relevant system package and verify that the executable is available in `PATH`.
+
+### Unsupported arguments
+
+Check the installed version and help output. Not every release necessarily supports every command or argument documented here.
+
+## Development and Publishing
+
+To build and validate a Python package, install the packaging tools:
 
 ```bash
-ls -l /usr/local/bin/pilot
-head -n 1 /usr/local/bin/pilot
-python3 --version
+python3 -m pip install --upgrade build twine
 ```
 
-If the command is found but produces a Python error, check that the Python interpreter and PILOT package referenced by the executable are available.
+Before publishing an update, increment the package version in `pyproject.toml`.
 
-**Note:** Run PILOT as root only when elevated privileges are needed for system diagnostics. Review any suggested administrative commands before executing them.
+Build the distribution:
+
+```bash
+python3 -m build
+```
+
+Validate the generated package files:
+
+```bash
+python3 -m twine check dist/*
+```
+
+Upload to PyPI:
+
+```bash
+python3 -m twine upload dist/*
+```
+
+Use a PyPI API token and follow PyPI's authentication guidance. Never commit API tokens, passwords, or private keys to GitHub.
+
+For a source-code release, commit the intended changes and push them to your repository.
+
+## Contributing
+
+Contributions, bug reports, feature requests, and suggestions are welcome.
+
+1. Fork the repository.
+2. Create a branch for your changes.
+3. Test the changes on an appropriate Linux environment.
+4. Submit a pull request describing the changes and test results.
+
+Replace the following placeholders with your actual GitHub repository details:
+
+- **Repository:** `https://github.com/YOUR_USERNAME/pilot-linux`
+- **Issues:** `https://github.com/YOUR_USERNAME/pilot-linux/issues`
 
 ## License
 
-Distributed under the Apache License 2.0. See the `LICENSE` file for more details.
+PILOT is distributed under the license specified in the project's `LICENSE` file. Refer to that file for the applicable terms.
+
+---
+
+**PILOT — Simplifying Linux Monitoring and Troubleshooting.**
 

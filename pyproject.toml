@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "pilot-linux"
-version = "1.2.0"
+version = "1.3.0"
 description = "Linux system monitoring and troubleshooting toolkit"
 readme = "README.md"
 requires-python = ">=3.9"

@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 src/pilot/__init__.py
