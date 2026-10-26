@@ -181,9 +181,3 @@ This project is distributed under the **Apache License 2.0**. Include
 the project's `LICENSE` file in the repository and ensure it contains
 the complete Apache 2.0 license text.
 
-## Package
-
--   **PyPI:** <https://pypi.org/project/pilot-linux/>
--   **Repository:** Add your GitHub repository URL here.
--   **Issues and support:** Use the Issues tab in your GitHub
-    repository.
